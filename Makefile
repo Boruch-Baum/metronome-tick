@@ -1,7 +1,7 @@
 LDFLAGS=-lasound
 
-tick: tick.o
-	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
+tick: tick.c lib/config.c lib/config.h
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm tick tick.o
+	rm tick
