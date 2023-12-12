@@ -47,15 +47,17 @@ int main(void) {
 	}
 	free(config.presets);
 
+	snd_pcm_sframes_t frames;
 	while (1) {
-		rc = snd_pcm_writei(pcm, buffer, buff_size);
-		if (rc == -EPIPE) {
-			fprintf(stderr, "underrun\n");
-			snd_pcm_prepare(pcm);
-		} else if (rc < 0) {
-			fprintf(stderr, "error on writei: %s\n", snd_strerror(rc));
-		} else if (rc != buff_size) {
-			fprintf(stderr, "short write: %d\n", rc);
+		frames = snd_pcm_writei(pcm, buffer, buff_size);
+		if (frames < 0) {
+			frames = snd_pcm_recover(pcm, frames, 0);
+		}
+		if (frames < 0) {
+			fprintf(stderr, "snd_pcm_writei failed: %s\n", snd_strerror(frames));
+			break;
+		} else if (frames < buff_size) {
+			fprintf(stderr, "short write: expected %i, wrote %li\n", buff_size, frames);
 		}
 	}
 
