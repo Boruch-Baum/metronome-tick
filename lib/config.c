@@ -57,7 +57,7 @@ struct Config get_config(void) {
 
 	FILE *file = read_config();
 	if (file == NULL) {
-		return config;
+		goto fill_return;
 	}
 
 	char line[LINE_SIZE];
@@ -105,6 +105,7 @@ struct Config get_config(void) {
 	}
 	fclose(file);
 
+fill_return:
 	if (config.presets_size == 0) {
 		config.presets[0] = (struct Preset){
 			.name = "default",
