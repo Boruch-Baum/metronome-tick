@@ -7,13 +7,6 @@
 
 #define INIT_PRESETS_CAPACITY 2
 
-void throw_invalid_config(char *error, FILE *file, struct Config config) {
-	fprintf(stderr, "Invalid configuration: %s\n", error);
-	fclose(file);
-	free(config.presets);
-	exit(1);
-}
-
 char str_to_key(char *str) {
 	if (strcmp(str, "space") == 0) {
 		return 32;
@@ -61,6 +54,7 @@ struct Config get_config(void) {
 	}
 
 	char line[LINE_SIZE];
+	char *error;
 	while (fgets(line, LINE_SIZE, file) != NULL) {
 		if (line[0] == '#' || line[0] == '\n') {
 			continue;
@@ -72,9 +66,11 @@ struct Config get_config(void) {
 			}
 			char *pos = strrchr(line, ']');
 			if (pos == NULL) {
-				throw_invalid_config("unmatched '['", file, config);
+				error = "unmatched '['";
+				goto invalid_config_exit;
 			} else if (pos - 1 == line) {
-				throw_invalid_config("preset name must be non-empty", file, config);
+				error = "preset name must be non-empty";
+				goto invalid_config_exit;
 			}
 			strncpy(config.presets[config.presets_size].name, line + 1, pos - line - 1);
 			config.presets[config.presets_size].name[pos - line - 1] = '\0';
@@ -117,4 +113,9 @@ fill_return:
 		config.presets_size = 1;
 	}
 	return config;
+invalid_config_exit:
+	fprintf(stderr, "Invalid configuration: %s\n", error);
+	fclose(file);
+	free(config.presets);
+	exit(1);
 }
