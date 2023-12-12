@@ -10,7 +10,7 @@ struct Keys {
 struct Preset {
 	char name[LINE_SIZE - 3]; // 64 - []\n
 	int bpm;
-	char pattern[16];
+	char pattern[32];
 };
 
 struct Config {

@@ -75,6 +75,7 @@ struct Config get_config(void) {
 				throw_invalid_config("preset name must be non-empty", file, config);
 			}
 			strncpy(config.presets[config.presets_size].name, line+1, pos - line - 1);
+			config.presets[config.presets_size].name[pos-line-1] = '\0';
 			config.presets[config.presets_size].bpm = 0;
 			config.presets[config.presets_size].pattern[0] = '\0';
 			config.presets_size += 1;
@@ -98,6 +99,7 @@ struct Config get_config(void) {
 				config.presets[config.presets_size-1].bpm = atoi(pos+1);
 			} else if (strncmp(line, "pattern", pos - line) == 0) {
 				strncpy(config.presets[config.presets_size-1].pattern, pos+1, strlen(pos+1) - 1);
+				config.presets[config.presets_size-1].pattern[strlen(pos+1) - 1] = '\0';
 			}
 		}
 	}
