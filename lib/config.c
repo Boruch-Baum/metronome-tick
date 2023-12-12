@@ -1,9 +1,9 @@
-#include <sys/stat.h>
+#include "config.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "config.h"
+#include <sys/stat.h>
 
 #define INIT_PRESETS_CAPACITY 2
 
@@ -28,7 +28,7 @@ FILE *read_config(void) {
 	char config_path[PATH_MAX];
 	const char *XDG_CONFIG_HOME = getenv("XDG_CONFIG_HOME");
 	if (XDG_CONFIG_HOME == NULL || XDG_CONFIG_HOME[0] == '\0') {
-		const char* HOME = getenv("HOME");
+		const char *HOME = getenv("HOME");
 		if (HOME == NULL || HOME[0] == '\0') {
 			return NULL;
 		}
@@ -62,7 +62,9 @@ struct Config get_config(void) {
 
 	char line[LINE_SIZE];
 	while (fgets(line, LINE_SIZE, file) != NULL) {
-		if (line[0] == '#' || line[0] == '\n') continue;
+		if (line[0] == '#' || line[0] == '\n') {
+			continue;
+		}
 		if (line[0] == '[') {
 			if (config.presets_size == presets_capacity) {
 				presets_capacity *= 2;
@@ -74,32 +76,32 @@ struct Config get_config(void) {
 			} else if (pos - 1 == line) {
 				throw_invalid_config("preset name must be non-empty", file, config);
 			}
-			strncpy(config.presets[config.presets_size].name, line+1, pos - line - 1);
-			config.presets[config.presets_size].name[pos-line-1] = '\0';
+			strncpy(config.presets[config.presets_size].name, line + 1, pos - line - 1);
+			config.presets[config.presets_size].name[pos - line - 1] = '\0';
 			config.presets[config.presets_size].bpm = 0;
 			config.presets[config.presets_size].pattern[0] = '\0';
 			config.presets_size += 1;
 		} else {
 			char *pos = strchr(line, '=');
 			if (strncmp(line, "freq>", pos - line) == 0) {
-				config.freq_accented = atoi(pos+1);
+				config.freq_accented = atoi(pos + 1);
 			} else if (strncmp(line, "freq.", pos - line) == 0) {
-				config.freq_general = atoi(pos+1);
+				config.freq_general = atoi(pos + 1);
 			} else if (strncmp(line, "interval", pos - line) == 0) {
-				config.interval = atoi(pos+1);
+				config.interval = atoi(pos + 1);
 			} else if (strncmp(line, "up", pos - line) == 0) {
-				config.keys.up = str_to_key(pos+1);
+				config.keys.up = str_to_key(pos + 1);
 			} else if (strncmp(line, "down", pos - line) == 0) {
-				config.keys.down = str_to_key(pos+1);
+				config.keys.down = str_to_key(pos + 1);
 			} else if (strncmp(line, "play_pause", pos - line) == 0) {
-				config.keys.play_pause = str_to_key(pos+1);
+				config.keys.play_pause = str_to_key(pos + 1);
 			} else if (strncmp(line, "show_prompt", pos - line) == 0) {
-				config.keys.show_prompt = str_to_key(pos+1);
+				config.keys.show_prompt = str_to_key(pos + 1);
 			} else if (strncmp(line, "bpm", pos - line) == 0) {
-				config.presets[config.presets_size-1].bpm = atoi(pos+1);
+				config.presets[config.presets_size - 1].bpm = atoi(pos + 1);
 			} else if (strncmp(line, "pattern", pos - line) == 0) {
-				strncpy(config.presets[config.presets_size-1].pattern, pos+1, strlen(pos+1) - 1);
-				config.presets[config.presets_size-1].pattern[strlen(pos+1) - 1] = '\0';
+				strncpy(config.presets[config.presets_size - 1].pattern, pos + 1, strlen(pos + 1) - 1);
+				config.presets[config.presets_size - 1].pattern[strlen(pos + 1) - 1] = '\0';
 			}
 		}
 	}

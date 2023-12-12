@@ -1,20 +1,20 @@
-#include <string.h>
-#include <stdlib.h>
+#include "config_test.h"
+#include "../lib/config.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
-#include "../lib/config.h"
-#include "config_test.h"
 
 int configs_equal(struct Config c1, struct Config c2) {
 	if (c1.freq_accented != c2.freq_accented ||
-		c1.freq_general != c2.freq_general ||
-		c1.interval != c2.interval ||
-		c1.keys.up != c2.keys.up ||
-		c1.keys.down != c2.keys.down ||
-		c1.keys.play_pause != c2.keys.play_pause ||
-		c1.keys.show_prompt != c2.keys.show_prompt ||
-		c1.presets_size != c2.presets_size) {
+			c1.freq_general != c2.freq_general ||
+			c1.interval != c2.interval ||
+			c1.keys.up != c2.keys.up ||
+			c1.keys.down != c2.keys.down ||
+			c1.keys.play_pause != c2.keys.play_pause ||
+			c1.keys.show_prompt != c2.keys.show_prompt ||
+			c1.presets_size != c2.presets_size) {
 		return 0;
 	}
 	for (int i = 0; i < c1.presets_size; i++) {

@@ -1,9 +1,9 @@
+#include "lib/config.h"
 #include <alsa/asoundlib.h>
 #include <string.h>
-#include "lib/config.h"
 
 #define SAMPLE_RATE 8000 // number of values per second
-#define AMPLITUDE 256 // 2^8 for uint8_t
+#define AMPLITUDE 256    // 2^8 for uint8_t
 
 int main(void) {
 	struct Config config = get_config();
@@ -30,9 +30,14 @@ int main(void) {
 
 	for (int i = 0; config.presets[0].pattern[i] != '\0'; i++) {
 		switch (config.presets[0].pattern[i]) {
-			case '>': freq = config.freq_accented; break;
-			case '.': freq = config.freq_general; break;
-			default: freq = 0;
+		case '>':
+			freq = config.freq_accented;
+			break;
+		case '.':
+			freq = config.freq_general;
+			break;
+		default:
+			freq = 0;
 		}
 		int inc = AMPLITUDE * freq / SAMPLE_RATE;
 		int offset = i * tick_frame_size;
