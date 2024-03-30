@@ -1,5 +1,5 @@
 #include "config_test.h"
 
 int main(void) {
-	return test_config();
+	return config_test_suites();
 }

@@ -1,1 +1,1 @@
-int test_config(void);
+int config_test_suites(void);

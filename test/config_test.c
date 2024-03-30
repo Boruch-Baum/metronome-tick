@@ -1,4 +1,5 @@
 #include "config_test.h"
+#include "minunit.h"
 #include "../lib/config.h"
 #include <assert.h>
 #include <stdio.h>
@@ -6,28 +7,46 @@
 #include <string.h>
 #include <sys/stat.h>
 
-int configs_equal(struct Config c1, struct Config c2) {
-	if (c1.freq_accented != c2.freq_accented ||
-			c1.freq_general != c2.freq_general ||
-			c1.interval != c2.interval ||
-			c1.keys.up != c2.keys.up ||
-			c1.keys.down != c2.keys.down ||
-			c1.keys.play_pause != c2.keys.play_pause ||
-			c1.keys.show_prompt != c2.keys.show_prompt ||
-			c1.presets_size != c2.presets_size) {
-		return 0;
-	}
+void configs_equal(struct Config c1, struct Config c2) {
+	mu_assert_int_eq(c1.freq_accented, c2.freq_accented);
+	mu_assert_int_eq(c1.freq_general, c2.freq_general);
+	mu_assert_int_eq(c1.interval, c2.interval);
+	mu_assert_int_eq(c1.keys.up, c2.keys.up);
+	mu_assert_int_eq(c1.keys.down, c2.keys.down);
+	mu_assert_int_eq(c1.keys.play_pause, c2.keys.play_pause);
+	mu_assert_int_eq(c1.keys.show_prompt, c2.keys.show_prompt);
+	mu_assert_int_eq(c1.presets_size, c2.presets_size);
 	for (int i = 0; i < c1.presets_size; i++) {
-		if (c1.presets[i].bpm != c2.presets[i].bpm ||
-				strcmp(c1.presets[i].name, c2.presets[i].name) != 0 ||
-				strcmp(c1.presets[i].pattern, c2.presets[i].pattern) != 0) {
-			return 0;
-		}
+		mu_assert_int_eq(c1.presets[i].bpm, c2.presets[i].bpm);
+		mu_assert_string_eq(c1.presets[i].name, c2.presets[i].name);
+		mu_assert_string_eq(c1.presets[i].pattern, c2.presets[i].pattern);
 	}
-	return 1;
 }
 
-int _test_default_config(void) {
+void test_setup(void) {
+	mkdir("/fakehome", 0775);
+	mkdir("/fakehome/.config", 0775);
+	mkdir("/fakehome/.config/tick", 0775);
+	mkdir("/home/fakeuser", 0775);
+	mkdir("/home/fakeuser/.config", 0775);
+	mkdir("/home/fakeuser/.config/tick", 0775);
+
+	FILE *file = fopen("/fakehome/.config/tick/tick.ini", "w");
+	assert(file != NULL);
+	fprintf(file, "freq>=1\n");
+	fclose(file);
+
+	file = fopen("/home/fakeuser/.config/tick/tick.ini", "w");
+	assert(file != NULL);
+	fprintf(file, "freq>=2\n");
+	fclose(file);
+}
+
+void test_teardown(void) {
+	system("rm -r /fakehome /home/fakeuser");
+}
+
+void _test_default_config(void) {
 	struct Config actual = get_config();
 	struct Config expected = {
 		.freq_accented = 587,
@@ -47,82 +66,41 @@ int _test_default_config(void) {
 		.bpm = 120,
 		.pattern = ">...",
 	};
-	int pass = configs_equal(actual, expected);
+	configs_equal(actual, expected);
 	free(actual.presets);
 	free(expected.presets);
-	return pass;
 }
 
-int test_default_config(void) {
-	printf("Running %s... ", __func__);
-	int pass = _test_default_config();
-	if (pass) {
-		printf("Passed 😊\n");
-	}
-	return !pass;
+MU_TEST(test_default_config) {
+	_test_default_config();
 }
 
-void setup(void) {
-	mkdir("/fakehome", 0775);
-	mkdir("/fakehome/.config", 0775);
-	mkdir("/fakehome/.config/tick", 0775);
-	mkdir("/home/fakeuser", 0775);
-	mkdir("/home/fakeuser/.config", 0775);
-	mkdir("/home/fakeuser/.config/tick", 0775);
-
-	FILE *file = fopen("/fakehome/.config/tick/tick.ini", "w");
-	assert(file != NULL);
-	fprintf(file, "freq>=1\n");
-	fclose(file);
-
-	file = fopen("/home/fakeuser/.config/tick/tick.ini", "w");
-	assert(file != NULL);
-	fprintf(file, "freq>=2\n");
-	fclose(file);
+MU_TEST_SUITE(default_config_test_suite) {
+	MU_RUN_TEST(test_default_config);
 }
 
-void teardown(void) {
-	system("rm -r /fakehome /home/fakeuser");
-}
-
-int test_xdg_config_home(void) {
-	printf("Running %s... ", __func__);
+MU_TEST(test_xdg_config_home) {
 	setenv("XDG_CONFIG_HOME", "/home/fakeuser/.config", 1);
 	struct Config config = get_config();
-	int pass = config.freq_accented == 2;
+	mu_assert_int_eq(config.freq_accented, 2);
 	free(config.presets);
-	if (pass) {
-		printf("Passed 😊\n");
-	}
-	return !pass;
 }
 
-int test_no_xdg_config_home(void) {
-	printf("Running %s... ", __func__);
+MU_TEST(test_no_xdg_config_home) {
 	setenv("HOME", "/fakehome", 1);
 	unsetenv("XDG_CONFIG_HOME");
 	struct Config config = get_config();
-	int pass = config.freq_accented == 1;
+	mu_assert_int_eq(config.freq_accented, 1);
 	free(config.presets);
-	if (pass) {
-		printf("Passed 😊\n");
-	}
-	return !pass;
 }
 
-int test_no_home(void) {
-	printf("Running %s... ", __func__);
+MU_TEST(test_no_home) {
 	unsetenv("HOME");
 	unsetenv("XDG_CONFIG_HOME");
-	int pass = _test_default_config();
-	if (pass) {
-		printf("Passed 😊\n");
-	}
-	return test_default_config();
+	_test_default_config();
 }
 
-int test_full_config(void) {
-	printf("Running %s... ", __func__);
+MU_TEST(test_full_config) {
 	setenv("XDG_CONFIG_HOME", "/home/fakeuser/.config", 1);
 	FILE *src = fopen("test/data/tick.ini", "r");
 	FILE *dst = fopen("/home/fakeuser/.config/tick/tick.ini", "w");
@@ -169,22 +147,22 @@ int test_full_config(void) {
 		.bpm = 320,
 		.pattern = ">.>.>>.>.>..>.>.",
 	};
-	int pass = configs_equal(actual, expected);
+	configs_equal(actual, expected);
 	free(actual.presets);
 	free(expected.presets);
-	if (pass) {
-		printf("Passed 😊\n");
-	}
-	return !pass;
 }
 
-int test_config(void) {
-	int rc = test_default_config();
-	setup();
-	rc = test_xdg_config_home() ||
-		test_no_xdg_config_home() ||
-		test_no_home() ||
-		test_full_config();
-	teardown();
-	return rc;
+MU_TEST_SUITE(config_test_suite) {
+	MU_SUITE_CONFIGURE(&test_setup, &test_teardown);
+	MU_RUN_TEST(test_xdg_config_home);
+	MU_RUN_TEST(test_no_xdg_config_home);
+	MU_RUN_TEST(test_no_home);
+	MU_RUN_TEST(test_full_config);
+}
+
+int config_test_suites(void) {
+	MU_RUN_SUITE(default_config_test_suite);
+	MU_RUN_SUITE(config_test_suite);
+	MU_REPORT();
+	return MU_EXIT_CODE;
 }
