@@ -43,7 +43,7 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 	return buffer;
 }
 
-void *start_player(void* args) {
+void *_start_player(void* args) {
 	struct PlayerArgs *pa = args;
 	snd_pcm_sframes_t frames;
 	while (1) {
@@ -60,6 +60,15 @@ void *start_player(void* args) {
 	}
 	snd_pcm_close(pa->pcm);
 	return NULL;
+}
+
+void start_player(pthread_t *tid, struct PlayerState *ps, struct PlayerArgs *pa) {
+	if (ps->playing) {
+		pthread_cancel(*tid);
+	}
+	pa->buffer = create_waves(&pa->buff_size, ps);
+	pthread_create(tid, NULL, _start_player, pa);
+	ps->playing = 1;
 }
 
 void display_player_state(struct PlayerState *ps) {
