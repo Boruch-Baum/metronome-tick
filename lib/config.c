@@ -54,6 +54,7 @@ struct Config get_config(void) {
 			.down = 'j',
 			.toggle_play = ' ',
 			.show_prompt = ':',
+			.quit = 'q',
 		},
 		.presets_size = 0,
 		.presets = malloc(sizeof(struct Preset) * presets_capacity),
@@ -104,6 +105,8 @@ struct Config get_config(void) {
 				config.keys.toggle_play = str_to_key(pos + 1);
 			} else if (strncmp(line, "show_prompt", pos - line) == 0) {
 				config.keys.show_prompt = str_to_key(pos + 1);
+			} else if (strncmp(line, "quit", pos - line) == 0) {
+				config.keys.quit = str_to_key(pos + 1);
 			} else if (strncmp(line, "bpm", pos - line) == 0) {
 				config.presets[config.presets_size - 1].bpm = atoi(pos + 1);
 			} else if (strncmp(line, "pattern", pos - line) == 0) {

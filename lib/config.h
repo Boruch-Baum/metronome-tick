@@ -5,6 +5,7 @@ struct Keys {
 	char down;
 	char toggle_play;
 	char show_prompt;
+	char quit;
 };
 
 struct Preset {

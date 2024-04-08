@@ -43,6 +43,10 @@ int main(void) {
 				start_player(&tid, &ps, &pa);
 			}
 		} else if (c == config.keys.show_prompt) {
+		} else if (c == config.keys.quit) {
+			printf("\n");
+			pthread_cancel(tid);
+			break;
 		}
 	}
 	free(pa.buffer);
