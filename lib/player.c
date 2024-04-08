@@ -66,6 +66,9 @@ void start_player(pthread_t *tid, struct PlayerState *ps, struct PlayerArgs *pa)
 	if (ps->playing) {
 		pthread_cancel(*tid);
 	}
+	if (pa->buffer) {
+		free(pa->buffer);
+	}
 	pa->buffer = create_waves(&pa->buff_size, ps);
 	pthread_create(tid, NULL, _start_player, pa);
 	ps->playing = 1;

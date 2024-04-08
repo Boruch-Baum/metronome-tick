@@ -15,7 +15,7 @@ int main(void) {
 	pthread_t tid;
 	snd_pcm_t *pcm;
 	prepare_player(&pcm);
-	struct PlayerArgs pa = {.pcm = pcm};
+	struct PlayerArgs pa = {.pcm = pcm, .buffer = NULL};
 	start_player(&tid, &ps, &pa);
 	display_player_state(&ps);
 
@@ -45,6 +45,7 @@ int main(void) {
 		} else if (c == config.keys.show_prompt) {
 		}
 	}
+	free(pa.buffer);
 	free(config.presets);
 	return 0;
 }
