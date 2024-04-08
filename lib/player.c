@@ -18,18 +18,18 @@ void prepare_player(snd_pcm_t **pcm) {
 		40000);      // latency
 }
 
-uint8_t *create_waves(int *buff_size, int bpm, char *pattern, int freq_accented, int freq_general) {
-	int tick_frame_size = SAMPLE_RATE / bpm * 60; // SAMPLE_RATE / (bpm / 60)
-	*buff_size = tick_frame_size * strlen(pattern);
+uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
+	int tick_frame_size = SAMPLE_RATE / ps->bpm * 60; // SAMPLE_RATE / (bpm / 60)
+	*buff_size = tick_frame_size * strlen(ps->pattern);
 	uint8_t *buffer = calloc(sizeof(uint8_t), *buff_size);
 	int freq;
-	for (int i = 0; pattern[i] != '\0'; i++) {
-		switch (pattern[i]) {
+	for (int i = 0; ps->pattern[i] != '\0'; i++) {
+		switch (ps->pattern[i]) {
 		case '>':
-			freq = freq_accented;
+			freq = ps->freq_accented;
 			break;
 		case '.':
-			freq = freq_general;
+			freq = ps->freq_general;
 			break;
 		default:
 			freq = 0;

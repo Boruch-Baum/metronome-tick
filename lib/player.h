@@ -15,6 +15,6 @@ struct PlayerArgs {
 };
 
 void prepare_player(snd_pcm_t**);
-uint8_t *create_waves(int*, int, char*, int, int);
+uint8_t *create_waves(int*, struct PlayerState*);
 void *start_player(void*);
 void display_player_state(struct PlayerState*);

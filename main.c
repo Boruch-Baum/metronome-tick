@@ -9,7 +9,6 @@ int main(void) {
 	prepare_player(&pcm);
 
 	int buff_size;
-	uint8_t *buffer = create_waves(&buff_size, config.presets[0].bpm, config.presets[0].pattern, config.freq_accented, config.freq_general);
 	struct PlayerState player_state = {
 		.playing = 1,
 		.bpm = config.presets[0].bpm,
@@ -17,6 +16,7 @@ int main(void) {
 		.freq_general = config.freq_general,
 	};
 	strncpy(player_state.pattern, config.presets[0].pattern, 32);
+	uint8_t *buffer = create_waves(&buff_size, &player_state);
 	free(config.presets);
 
 	pthread_t player_tid;
