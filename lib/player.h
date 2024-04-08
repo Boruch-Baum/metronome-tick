@@ -1,5 +1,13 @@
 #include <alsa/asoundlib.h>
 
+struct PlayerState {
+	int playing;
+	int bpm;
+	char pattern[32];
+	int freq_accented;
+	int freq_general;
+};
+
 struct PlayerArgs {
 	snd_pcm_t *pcm;
 	uint8_t *buffer;
@@ -9,3 +17,4 @@ struct PlayerArgs {
 void prepare_player(snd_pcm_t**);
 uint8_t *create_waves(int*, int, char*, int, int);
 void *start_player(void*);
+void display_player_state(struct PlayerState*);

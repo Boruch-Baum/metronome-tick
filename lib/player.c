@@ -61,3 +61,9 @@ void *start_player(void* args) {
 	snd_pcm_close(pa->pcm);
 	return NULL;
 }
+
+void display_player_state(struct PlayerState *ps) {
+	printf("\33[2K\r"); // https://stackoverflow.com/a/35190285/10254049
+	printf("%s @ %d", ps->pattern, ps->bpm);
+	fflush(stdout);
+}
