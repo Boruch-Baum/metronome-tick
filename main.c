@@ -23,7 +23,27 @@ int main(void) {
 	int c;
 	while (1) {
 		c = get_input();
-		printf("pressed %d\n", c);
+		if (c == config.keys.up) {
+			ps.bpm += config.interval;
+			display_player_state(&ps);
+			if (ps.playing) {
+				start_player(&tid, &ps, &pa);
+			}
+		} else if (c == config.keys.down) {
+			ps.bpm -= config.interval;
+			display_player_state(&ps);
+			if (ps.playing) {
+				start_player(&tid, &ps, &pa);
+			}
+		} else if (c == config.keys.play_pause) {
+			if (ps.playing) {
+				pthread_cancel(tid);
+				ps.playing = 0;
+			} else {
+				start_player(&tid, &ps, &pa);
+			}
+		} else if (c == config.keys.show_prompt) {
+		}
 	}
 	free(config.presets);
 	return 0;
