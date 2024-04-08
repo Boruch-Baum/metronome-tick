@@ -3,7 +3,7 @@
 struct Keys {
 	char up;
 	char down;
-	char play_pause;
+	char toggle_play;
 	char show_prompt;
 };
 

@@ -52,7 +52,7 @@ struct Config get_config(void) {
 		.keys = {
 			.up = 'k',
 			.down = 'j',
-			.play_pause = ' ',
+			.toggle_play = ' ',
 			.show_prompt = ':',
 		},
 		.presets_size = 0,
@@ -100,8 +100,8 @@ struct Config get_config(void) {
 				config.keys.up = str_to_key(pos + 1);
 			} else if (strncmp(line, "down", pos - line) == 0) {
 				config.keys.down = str_to_key(pos + 1);
-			} else if (strncmp(line, "play_pause", pos - line) == 0) {
-				config.keys.play_pause = str_to_key(pos + 1);
+			} else if (strncmp(line, "toggle_play", pos - line) == 0) {
+				config.keys.toggle_play = str_to_key(pos + 1);
 			} else if (strncmp(line, "show_prompt", pos - line) == 0) {
 				config.keys.show_prompt = str_to_key(pos + 1);
 			} else if (strncmp(line, "bpm", pos - line) == 0) {

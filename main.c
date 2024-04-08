@@ -35,7 +35,7 @@ int main(void) {
 			if (ps.playing) {
 				start_player(&tid, &ps, &pa);
 			}
-		} else if (c == config.keys.play_pause) {
+		} else if (c == config.keys.toggle_play) {
 			if (ps.playing) {
 				pthread_cancel(tid);
 				ps.playing = 0;
