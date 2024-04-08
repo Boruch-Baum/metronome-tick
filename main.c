@@ -13,8 +13,8 @@ int main(void) {
 	free(config.presets);
 
 	pthread_t player_tid;
-	struct player_args args = { .pcm = pcm, .buffer = buffer, .buff_size = buff_size };
-	pthread_create(&player_tid, NULL, start_player, &args);
+	struct PlayerArgs player_args = { .pcm = pcm, .buffer = buffer, .buff_size = buff_size };
+	pthread_create(&player_tid, NULL, start_player, &player_args);
 
 	prepare_for_input();
 	int c;

@@ -44,7 +44,7 @@ uint8_t *create_waves(int *buff_size, int bpm, char *pattern, int freq_accented,
 }
 
 void *start_player(void* args) {
-	struct player_args *pa = args;
+	struct PlayerArgs *pa = args;
 	snd_pcm_sframes_t frames;
 	while (1) {
 		frames = snd_pcm_writei(pa->pcm, pa->buffer, pa->buff_size);

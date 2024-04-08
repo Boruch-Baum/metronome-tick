@@ -1,6 +1,6 @@
 #include <alsa/asoundlib.h>
 
-struct player_args {
+struct PlayerArgs {
 	snd_pcm_t *pcm;
 	uint8_t *buffer;
 	int buff_size;
