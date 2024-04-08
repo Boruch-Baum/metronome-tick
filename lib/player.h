@@ -1,7 +1,5 @@
 #include <alsa/asoundlib.h>
 
-#define SAMPLE_RATE 8000 // number of values per second
-
 struct player_args {
 	snd_pcm_t *pcm;
 	uint8_t *buffer;
@@ -9,4 +7,5 @@ struct player_args {
 };
 
 void prepare_player(snd_pcm_t**);
+uint8_t *create_waves(int*, int, char*, int, int);
 void *start_player(void*);

@@ -1,6 +1,9 @@
 #include "player.h"
 #include <alsa/asoundlib.h>
 
+#define SAMPLE_RATE 8000 // number of values per second
+#define AMPLITUDE 256 // 2^8 for uint8_t
+
 void prepare_player(snd_pcm_t **pcm) {
 	int rc = snd_pcm_open(pcm, "default", SND_PCM_STREAM_PLAYBACK, 0);
 	if (rc) {
@@ -14,6 +17,31 @@ void prepare_player(snd_pcm_t **pcm) {
 		SAMPLE_RATE,
 		0,           // disable software resampling
 		40000);      // latency
+}
+
+uint8_t *create_waves(int *buff_size, int bpm, char *pattern, int freq_accented, int freq_general) {
+	int tick_frame_size = SAMPLE_RATE / bpm * 60; // SAMPLE_RATE / (bpm / 60)
+	*buff_size = tick_frame_size * strlen(pattern);
+	uint8_t *buffer = calloc(sizeof(uint8_t), *buff_size);
+	int freq;
+	for (int i = 0; pattern[i] != '\0'; i++) {
+		switch (pattern[i]) {
+		case '>':
+			freq = freq_accented;
+			break;
+		case '.':
+			freq = freq_general;
+			break;
+		default:
+			freq = 0;
+		}
+		int inc = AMPLITUDE * freq / SAMPLE_RATE;
+		int offset = i * tick_frame_size;
+		for (int j = 0, osc = 0; j < tick_frame_size / 4; j++, osc += inc) {
+			buffer[offset + j] = osc;
+		}
+	}
+	return buffer;
 }
 
 void *start_player(void* args) {
