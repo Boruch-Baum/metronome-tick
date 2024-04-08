@@ -1,5 +1,4 @@
 #include "player.h"
-#include <alsa/asoundlib.h>
 
 #define SAMPLE_RATE 8000 // number of values per second
 #define AMPLITUDE 256 // 2^8 for uint8_t

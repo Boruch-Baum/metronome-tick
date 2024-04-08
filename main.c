@@ -1,8 +1,6 @@
 #include "lib/config.h"
 #include "lib/input.h"
 #include "lib/player.h"
-#include <alsa/asoundlib.h>
-#include <stdio.h>
 #include <pthread.h>
 
 int main(void) {
