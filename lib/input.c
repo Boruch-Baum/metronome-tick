@@ -1,0 +1,44 @@
+#include "input.h"
+#include "keys.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <termios.h>
+
+#define ESCAPE_SEQUENCE 27
+
+struct termios original_termios;
+
+void reset_terminal_mode(void) {
+	tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
+}
+
+void prepare_for_input(void) {
+	tcgetattr(STDIN_FILENO, &original_termios);
+	atexit(reset_terminal_mode);
+	struct termios tui_termios = original_termios;
+	tui_termios.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &tui_termios);
+}
+
+int get_input(void) {
+	int c = getchar();
+	if (c == ESCAPE_SEQUENCE) { // https://stackoverflow.com/a/15306494/10254049
+		getchar();
+		c = getchar();
+		switch (c) {
+		case 'A':
+			return UP_ARROW_SUBSTITUTION;
+		case 'B':
+			return DOWN_ARROW_SUBSTITUTION;
+		case 'C':
+			return RIGHT_ARROW_SUBSTITUTION;
+		case 'D':
+			return LEFT_ARROW_SUBSTITUTION;
+		default:
+			return c;
+		}
+	} else {
+		return c;
+	}
+}

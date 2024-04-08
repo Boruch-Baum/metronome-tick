@@ -3,6 +3,7 @@
 #include "lib/player.h"
 #include <alsa/asoundlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <pthread.h>
 
 #define AMPLITUDE 256 // 2^8 for uint8_t
@@ -37,7 +38,15 @@ int main(void) {
 	}
 	free(config.presets);
 
+	pthread_t player_tid;
 	struct player_args args = { .pcm = pcm, .buffer = buffer, .buff_size = buff_size };
-	start_player(&args);
+	pthread_create(&player_tid, NULL, start_player, &args);
+
+	prepare_for_input();
+	int c;
+	while (1) {
+		c = get_input();
+		printf("pressed %d\n", c);
+	}
 	return 0;
 }

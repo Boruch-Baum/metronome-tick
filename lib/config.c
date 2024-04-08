@@ -1,4 +1,5 @@
 #include "config.h"
+#include "keys.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,10 +9,20 @@
 #define INIT_PRESETS_CAPACITY 2
 
 char str_to_key(char *str) {
-	if (strcmp(str, "space") == 0) {
-		return 32;
+	if (strcmp(str, "up") == 0) {
+		return UP_ARROW_SUBSTITUTION;
+	} else if (strcmp(str, "down") == 0) {
+		return DOWN_ARROW_SUBSTITUTION;
+	} else if (strcmp(str, "right") == 0) {
+		return RIGHT_ARROW_SUBSTITUTION;
+	} else if (strcmp(str, "left") == 0) {
+		return LEFT_ARROW_SUBSTITUTION;
+	} else if (strcmp(str, "tab") == 0) {
+		return 9;
 	} else if (strcmp(str, "enter") == 0) {
 		return 13;
+	} else if (strcmp(str, "space") == 0) {
+		return 32;
 	} else {
 		return str[0];
 	}
