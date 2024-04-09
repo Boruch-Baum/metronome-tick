@@ -1,7 +1,7 @@
 #include "player.h"
 
 #define SAMPLE_RATE 8000 // number of values per second
-#define AMPLITUDE 256 // 2^8 for uint8_t
+#define PEAK_TO_PEAK 256 // 2^8 for uint8_t
 
 void prepare_player(snd_pcm_t **pcm) {
 	int rc = snd_pcm_open(pcm, "default", SND_PCM_STREAM_PLAYBACK, 0);
@@ -34,7 +34,7 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 		default:
 			freq = 0;
 		}
-		int inc = AMPLITUDE * freq / SAMPLE_RATE;
+		int inc = PEAK_TO_PEAK * freq / SAMPLE_RATE;
 		int offset = i * tick_frame_size;
 		for (int j = 0, osc = 0; j < tick_frame_size / 4; j++, osc += inc) {
 			buffer[offset + j] = osc;
