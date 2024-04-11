@@ -180,7 +180,7 @@ invalid_config_exit:
 	exit(1);
 }
 
-void display_config(struct Config *c) {
+void display_keybinds(struct Config *c) {
 	char up_key[MAX_KEY_STR_LEN];
 	char down_key[MAX_KEY_STR_LEN];
 	char next_key[MAX_KEY_STR_LEN];

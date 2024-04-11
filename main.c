@@ -23,7 +23,7 @@ int main(void) {
 	prepare_player(&pcm);
 	struct PlayerArgs pa = {.pcm = pcm, .buffer = NULL};
 	start_player(&tid, &ps, &pa);
-	display_config(&config);
+	display_keybinds(&config);
 	display_player_state(&ps);
 
 	prepare_for_input();

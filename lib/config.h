@@ -28,4 +28,4 @@ struct Config {
 };
 
 void get_config(struct Config*);
-void display_config(struct Config*);
+void display_keybinds(struct Config*);
