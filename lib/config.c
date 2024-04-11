@@ -103,9 +103,9 @@ struct Config get_config(void) {
 		goto fill_return;
 	}
 
-	char line[LINE_SIZE];
+	char line[MAX_LINE_LEN];
 	char *error;
-	while (fgets(line, LINE_SIZE, file) != NULL) {
+	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
 		if (line[0] == '#' || line[0] == '\n') {
 			continue;
 		}
