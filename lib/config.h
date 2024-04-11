@@ -1,4 +1,5 @@
 #define MAX_LINE_LEN 64
+#define MAX_PRESET_NAME_LEN (MAX_LINE_LEN - 3) // 3 = []\n
 #define MAX_PATTERN_LEN 32
 
 struct Keys {
@@ -12,7 +13,7 @@ struct Keys {
 };
 
 struct Preset {
-	char name[MAX_LINE_LEN - 3]; // 64 - []\n
+	char name[MAX_PRESET_NAME_LEN];
 	int bpm;
 	char pattern[MAX_PATTERN_LEN];
 };
