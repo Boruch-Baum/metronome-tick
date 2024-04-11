@@ -1,4 +1,5 @@
 #define LINE_SIZE 64
+#define MAX_PATTERN_LEN 32
 
 struct Keys {
 	char up;
@@ -11,7 +12,7 @@ struct Keys {
 struct Preset {
 	char name[LINE_SIZE - 3]; // 64 - []\n
 	int bpm;
-	char pattern[32];
+	char pattern[MAX_PATTERN_LEN];
 };
 
 struct Config {

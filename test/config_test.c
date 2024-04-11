@@ -127,8 +127,8 @@ MU_TEST(test_full_config) {
 			.show_prompt = ';',
 			.quit = 'w',
 		},
-		.presets_size = 4,
-		.presets = malloc(sizeof(struct Preset) * 4),
+		.presets_size = 6,
+		.presets = malloc(sizeof(struct Preset) * 6),
 	};
 	expected.presets[0] = (struct Preset){
 		.name = "Ballade No. 1 in G minor, Op. 23 (Chopin) \"quote\"",
@@ -149,6 +149,16 @@ MU_TEST(test_full_config) {
 		.name = "Latin",
 		.bpm = 320,
 		.pattern = ">.>.>>.>.>..>.>.",
+	};
+	expected.presets[4] = (struct Preset) {
+		.name = "Too long",
+		.bpm = 120,
+		.pattern = ">..>..>..>..>..>..>..>..>..>..>",
+	};
+	expected.presets[5] = (struct Preset) {
+		.name = "Just short enough",
+		.bpm = 120,
+		.pattern = ">..>..>..>..>..>..>..>..>..>..>",
 	};
 	configs_equal(actual, expected);
 	free(actual.presets);

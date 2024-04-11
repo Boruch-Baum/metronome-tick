@@ -148,8 +148,10 @@ struct Config get_config(void) {
 			} else if (strncmp(line, "bpm", pos - line) == 0) {
 				config.presets[config.presets_size - 1].bpm = atoi(pos + 1);
 			} else if (strncmp(line, "pattern", pos - line) == 0) {
-				strncpy(config.presets[config.presets_size - 1].pattern, pos + 1, strlen(pos + 1) - 1);
-				config.presets[config.presets_size - 1].pattern[strlen(pos + 1) - 1] = '\0';
+				// strnlen - 1 to remove \n if < max len, and leave room for \0 if > max len
+				int len = strnlen(pos + 1, MAX_PATTERN_LEN) - 1;
+				strncpy(config.presets[config.presets_size - 1].pattern, pos + 1, len);
+				config.presets[config.presets_size - 1].pattern[len] = '\0';
 			}
 		}
 	}
