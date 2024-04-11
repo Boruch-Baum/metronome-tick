@@ -27,5 +27,5 @@ struct Config {
 	int presets_size;
 };
 
-struct Config get_config(void);
+void get_config(struct Config*);
 void display_config(struct Config*);

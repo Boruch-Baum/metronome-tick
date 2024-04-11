@@ -81,9 +81,9 @@ FILE *read_config(void) {
 	return fopen(config_path, "r");
 }
 
-struct Config get_config(void) {
+void get_config(struct Config *config) {
 	int presets_capacity = INIT_PRESETS_CAPACITY;
-	struct Config config = {
+	*config = (struct Config){
 		.freq_accented = 587,
 		.freq_general = 440,
 		.interval = 20,
@@ -112,9 +112,9 @@ struct Config get_config(void) {
 			continue;
 		}
 		if (line[0] == '[') {
-			if (config.presets_size == presets_capacity) {
+			if (config->presets_size == presets_capacity) {
 				presets_capacity *= 2;
-				config.presets = realloc(config.presets, sizeof(struct Preset) * presets_capacity);
+				config->presets = realloc(config->presets, sizeof(struct Preset) * presets_capacity);
 			}
 			char *pos = strrchr(line, ']');
 			if (pos == NULL) {
@@ -124,59 +124,59 @@ struct Config get_config(void) {
 				error = "preset name must be non-empty";
 				goto invalid_config_exit;
 			}
-			memcpy(config.presets[config.presets_size].name, line + 1, pos - line - 1);
-			config.presets[config.presets_size].name[pos - line - 1] = '\0';
-			config.presets[config.presets_size].bpm = 0;
-			config.presets[config.presets_size].pattern[0] = '\0';
-			config.presets_size += 1;
+			memcpy(config->presets[config->presets_size].name, line + 1, pos - line - 1);
+			config->presets[config->presets_size].name[pos - line - 1] = '\0';
+			config->presets[config->presets_size].bpm = 0;
+			config->presets[config->presets_size].pattern[0] = '\0';
+			config->presets_size += 1;
 		} else {
 			char *pos = strchr(line, '=');
 			if (strncmp(line, "freq>", pos - line) == 0) {
-				config.freq_accented = atoi(pos + 1);
+				config->freq_accented = atoi(pos + 1);
 			} else if (strncmp(line, "freq.", pos - line) == 0) {
-				config.freq_general = atoi(pos + 1);
+				config->freq_general = atoi(pos + 1);
 			} else if (strncmp(line, "interval", pos - line) == 0) {
-				config.interval = atoi(pos + 1);
+				config->interval = atoi(pos + 1);
 			} else if (strncmp(line, "up", pos - line) == 0) {
-				config.keys.up = str_to_key(pos + 1);
+				config->keys.up = str_to_key(pos + 1);
 			} else if (strncmp(line, "down", pos - line) == 0) {
-				config.keys.down = str_to_key(pos + 1);
+				config->keys.down = str_to_key(pos + 1);
 			} else if (strncmp(line, "next", pos - line) == 0) {
-				config.keys.next = str_to_key(pos + 1);
+				config->keys.next = str_to_key(pos + 1);
 			} else if (strncmp(line, "prev", pos - line) == 0) {
-				config.keys.prev = str_to_key(pos + 1);
+				config->keys.prev = str_to_key(pos + 1);
 			} else if (strncmp(line, "toggle_play", pos - line) == 0) {
-				config.keys.toggle_play = str_to_key(pos + 1);
+				config->keys.toggle_play = str_to_key(pos + 1);
 			} else if (strncmp(line, "show_prompt", pos - line) == 0) {
-				config.keys.show_prompt = str_to_key(pos + 1);
+				config->keys.show_prompt = str_to_key(pos + 1);
 			} else if (strncmp(line, "quit", pos - line) == 0) {
-				config.keys.quit = str_to_key(pos + 1);
+				config->keys.quit = str_to_key(pos + 1);
 			} else if (strncmp(line, "bpm", pos - line) == 0) {
-				config.presets[config.presets_size - 1].bpm = atoi(pos + 1);
+				config->presets[config->presets_size - 1].bpm = atoi(pos + 1);
 			} else if (strncmp(line, "pattern", pos - line) == 0) {
 				// strnlen - 1 to remove \n if < max len, and leave room for \0 if > max len
 				int len = strnlen(pos + 1, MAX_PATTERN_LEN) - 1;
-				memcpy(config.presets[config.presets_size - 1].pattern, pos + 1, len);
-				config.presets[config.presets_size - 1].pattern[len] = '\0';
+				memcpy(config->presets[config->presets_size - 1].pattern, pos + 1, len);
+				config->presets[config->presets_size - 1].pattern[len] = '\0';
 			}
 		}
 	}
 	fclose(file);
 
 fill_return:
-	if (config.presets_size == 0) {
-		config.presets[0] = (struct Preset){
+	if (config->presets_size == 0) {
+		config->presets[0] = (struct Preset){
 			.name = "Default",
 			.bpm = 120,
 			.pattern = ">...",
 		};
-		config.presets_size = 1;
+		config->presets_size = 1;
 	}
-	return config;
+	return;
 invalid_config_exit:
 	fprintf(stderr, "Invalid configuration: %s\n", error);
 	fclose(file);
-	free(config.presets);
+	free(config->presets);
 	exit(1);
 }
 

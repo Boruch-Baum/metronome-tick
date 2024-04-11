@@ -8,7 +8,8 @@ void apply_preset(struct PlayerState *ps, struct Config *config) {
 }
 
 int main(void) {
-	struct Config config = get_config();
+	struct Config config;
+	get_config(&config);
 	struct PlayerState ps = {
 		.playing = 0,
 		.freq_accented = config.freq_accented,

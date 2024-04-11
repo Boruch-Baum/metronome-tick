@@ -71,7 +71,8 @@ void _test_default_config(void) {
 		.bpm = 120,
 		.pattern = ">...",
 	};
-	struct Config result = get_config();
+	struct Config result;
+	get_config(&result);
 	configs_equal(expected, result);
 	free(expected.presets);
 	free(result.presets);
@@ -87,7 +88,8 @@ MU_TEST_SUITE(default_config_test_suite) {
 
 MU_TEST(test_xdg_config_home) {
 	setenv("XDG_CONFIG_HOME", "/home/fakeuser/.config", 1);
-	struct Config config = get_config();
+	struct Config config;
+	get_config(&config);
 	mu_assert_int_eq(config.freq_accented, 2);
 	free(config.presets);
 }
@@ -95,7 +97,8 @@ MU_TEST(test_xdg_config_home) {
 MU_TEST(test_no_xdg_config_home) {
 	setenv("HOME", "/fakehome", 1);
 	unsetenv("XDG_CONFIG_HOME");
-	struct Config config = get_config();
+	struct Config config;
+	get_config(&config);
 	mu_assert_int_eq(config.freq_accented, 1);
 	free(config.presets);
 }
@@ -165,7 +168,8 @@ MU_TEST(test_full_config) {
 		.bpm = 120,
 		.pattern = ">..>..>..>..>..>..>..>..>..>..>",
 	};
-	struct Config result = get_config();
+	struct Config result;
+	get_config(&result);
 	configs_equal(expected, result);
 	free(expected.presets);
 	free(result.presets);
