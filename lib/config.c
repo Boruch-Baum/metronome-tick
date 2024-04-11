@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #define INIT_PRESETS_CAPACITY 2
+#define MAX_KEY_STR_LEN 20 // "right arrow\0" + 8 escape characters from bolding
 
 char str_to_key(char *str) {
 	if (strcmp(str, "up") == 0) {
@@ -26,6 +27,43 @@ char str_to_key(char *str) {
 	} else {
 		return str[0];
 	}
+}
+
+void key_to_str(char *dst, char c) {
+	switch (c) {
+	case UP_ARROW_SUBSTITUTION:
+		strcpy(dst, "up arrow");
+		break;
+	case DOWN_ARROW_SUBSTITUTION:
+		strcpy(dst, "down arrow");
+		break;
+	case RIGHT_ARROW_SUBSTITUTION:
+		strcpy(dst, "right arrow");
+		break;
+	case LEFT_ARROW_SUBSTITUTION:
+		strcpy(dst, "left arrow");
+		break;
+	case 13:
+		strcpy(dst, "enter");
+		break;
+	case 32:
+		strcpy(dst, "space");
+		break;
+	default:
+		dst[0] = c;
+		dst[1] = '\0';
+	}
+}
+
+void boldify(char *str) {
+	int len = strlen(str);
+	char tmp[len + 1];
+	strncpy(tmp, str, len);
+	tmp[len] = '\0';
+	strncpy(str, "\033[1m", 4);
+	strncpy(str + 4, tmp, len);
+	strncpy(str + len + 4, "\033[0m", 4);
+	str[len + 8] = '\0';
 }
 
 FILE *read_config(void) {
@@ -132,4 +170,27 @@ invalid_config_exit:
 	fclose(file);
 	free(config.presets);
 	exit(1);
+}
+
+void display_config(struct Config *c) {
+	char up_key[MAX_KEY_STR_LEN];
+	char down_key[MAX_KEY_STR_LEN];
+	char toggle_play_key[MAX_KEY_STR_LEN];
+	char show_prompt_key[MAX_KEY_STR_LEN];
+	char quit_key[MAX_KEY_STR_LEN];
+
+	key_to_str(up_key, c->keys.up);
+	key_to_str(down_key, c->keys.down);
+	key_to_str(toggle_play_key, c->keys.toggle_play);
+	key_to_str(show_prompt_key, c->keys.show_prompt);
+	key_to_str(quit_key, c->keys.quit);
+
+	boldify(up_key);
+	boldify(down_key);
+	boldify(toggle_play_key);
+	boldify(show_prompt_key);
+	boldify(quit_key);
+
+	printf("%s +BPM | %s -BPM | %s Toggle play | %s Show prompt | %s Quit\n",
+			up_key, down_key, toggle_play_key, show_prompt_key, quit_key);
 }

@@ -24,3 +24,4 @@ struct Config {
 };
 
 struct Config get_config(void);
+void display_config(struct Config*);
