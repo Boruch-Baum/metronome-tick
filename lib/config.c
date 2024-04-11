@@ -166,7 +166,7 @@ struct Config get_config(void) {
 fill_return:
 	if (config.presets_size == 0) {
 		config.presets[0] = (struct Preset){
-			.name = "default",
+			.name = "Default",
 			.bpm = 120,
 			.pattern = ">...",
 		};

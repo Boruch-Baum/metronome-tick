@@ -67,7 +67,7 @@ void _test_default_config(void) {
 		.presets = malloc(sizeof(struct Preset)),
 	};
 	expected.presets[0] = (struct Preset){
-		.name = "default",
+		.name = "Default",
 		.bpm = 120,
 		.pattern = ">...",
 	};
