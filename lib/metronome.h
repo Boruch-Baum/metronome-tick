@@ -1,0 +1,19 @@
+#include "config.h"
+#include "player.h"
+
+struct Metronome {
+	pthread_t tid;
+	struct PlayerArgs pa;
+	struct PlayerState ps;
+	struct Config config;
+	int preset_index;
+	char preset_name[MAX_PRESET_NAME_LEN];
+};
+
+void init_metronome(struct Metronome *m);
+void apply_preset(struct Metronome *m);
+void start_metronome(struct Metronome *m);
+void stop_metronome(struct Metronome *m);
+void set_bpm(struct Metronome*, int);
+void set_preset(struct Metronome*, int);
+void display_player_state(struct Metronome*);
