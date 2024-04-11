@@ -75,6 +75,6 @@ void start_player(pthread_t *tid, struct PlayerState *ps, struct PlayerArgs *pa)
 
 void display_player_state(struct PlayerState *ps) {
 	printf("\33[2K\r"); // https://stackoverflow.com/a/35190285/10254049
-	printf("%s @ %d", ps->pattern, ps->bpm);
+	printf("\033[1m(%s)\033[0m %s @ %d", ps->preset_name, ps->pattern, ps->bpm);
 	fflush(stdout);
 }

@@ -90,6 +90,8 @@ struct Config get_config(void) {
 		.keys = {
 			.up = 'k',
 			.down = 'j',
+			.next = 'l',
+			.prev = 'h',
 			.toggle_play = ' ',
 			.show_prompt = ':',
 			.quit = 'q',
@@ -139,6 +141,10 @@ struct Config get_config(void) {
 				config.keys.up = str_to_key(pos + 1);
 			} else if (strncmp(line, "down", pos - line) == 0) {
 				config.keys.down = str_to_key(pos + 1);
+			} else if (strncmp(line, "next", pos - line) == 0) {
+				config.keys.next = str_to_key(pos + 1);
+			} else if (strncmp(line, "prev", pos - line) == 0) {
+				config.keys.prev = str_to_key(pos + 1);
 			} else if (strncmp(line, "toggle_play", pos - line) == 0) {
 				config.keys.toggle_play = str_to_key(pos + 1);
 			} else if (strncmp(line, "show_prompt", pos - line) == 0) {
@@ -177,22 +183,28 @@ invalid_config_exit:
 void display_config(struct Config *c) {
 	char up_key[MAX_KEY_STR_LEN];
 	char down_key[MAX_KEY_STR_LEN];
+	char next_key[MAX_KEY_STR_LEN];
+	char prev_key[MAX_KEY_STR_LEN];
 	char toggle_play_key[MAX_KEY_STR_LEN];
 	char show_prompt_key[MAX_KEY_STR_LEN];
 	char quit_key[MAX_KEY_STR_LEN];
 
 	key_to_str(up_key, c->keys.up);
 	key_to_str(down_key, c->keys.down);
+	key_to_str(next_key, c->keys.next);
+	key_to_str(prev_key, c->keys.prev);
 	key_to_str(toggle_play_key, c->keys.toggle_play);
 	key_to_str(show_prompt_key, c->keys.show_prompt);
 	key_to_str(quit_key, c->keys.quit);
 
 	boldify(up_key);
 	boldify(down_key);
+	boldify(next_key);
+	boldify(prev_key);
 	boldify(toggle_play_key);
 	boldify(show_prompt_key);
 	boldify(quit_key);
 
-	printf("%s +BPM | %s -BPM | %s Toggle play | %s Show prompt | %s Quit\n",
-			up_key, down_key, toggle_play_key, show_prompt_key, quit_key);
+	printf("%s +BPM | %s -BPM | %s Next preset | %s Prev preset | %s Toggle play | %s Show prompt | %s Quit\n",
+			up_key, down_key, next_key, prev_key, toggle_play_key, show_prompt_key, quit_key);
 }

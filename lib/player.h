@@ -1,3 +1,4 @@
+#include "config.h"
 #include <alsa/asoundlib.h>
 #include <pthread.h>
 
@@ -7,6 +8,8 @@ struct PlayerState {
 	char pattern[32];
 	int freq_accented;
 	int freq_general;
+	int preset_index;
+	char preset_name[MAX_PRESET_NAME_LEN];
 };
 
 // Compound arguments for the thread function `_start_player`.

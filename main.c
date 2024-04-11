@@ -1,16 +1,21 @@
-#include "lib/config.h"
 #include "lib/input.h"
 #include "lib/player.h"
+
+void apply_preset(struct PlayerState *ps, struct Config *config) {
+	ps->bpm = config->presets[ps->preset_index].bpm;
+	memcpy(ps->pattern, config->presets[ps->preset_index].pattern, MAX_PATTERN_LEN);
+	memcpy(ps->preset_name, config->presets[ps->preset_index].name, MAX_PRESET_NAME_LEN);
+}
 
 int main(void) {
 	struct Config config = get_config();
 	struct PlayerState ps = {
 		.playing = 0,
-		.bpm = config.presets[0].bpm,
 		.freq_accented = config.freq_accented,
 		.freq_general = config.freq_general,
+		.preset_index = 0,
 	};
-	memcpy(ps.pattern, config.presets[0].pattern, MAX_PATTERN_LEN);
+	apply_preset(&ps, &config);
 
 	pthread_t tid;
 	snd_pcm_t *pcm;
@@ -32,6 +37,20 @@ int main(void) {
 			}
 		} else if (c == config.keys.down) {
 			ps.bpm -= config.interval;
+			display_player_state(&ps);
+			if (ps.playing) {
+				start_player(&tid, &ps, &pa);
+			}
+		} else if (c == config.keys.next) {
+			ps.preset_index = (ps.preset_index + 1) % config.presets_size;
+			apply_preset(&ps, &config);
+			display_player_state(&ps);
+			if (ps.playing) {
+				start_player(&tid, &ps, &pa);
+			}
+		} else if (c == config.keys.prev) {
+			ps.preset_index = (ps.preset_index + config.presets_size - 1) % config.presets_size;
+			apply_preset(&ps, &config);
 			display_player_state(&ps);
 			if (ps.playing) {
 				start_player(&tid, &ps, &pa);
