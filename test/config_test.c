@@ -48,7 +48,6 @@ void test_teardown(void) {
 }
 
 void _test_default_config(void) {
-	struct Config actual = get_config();
 	struct Config expected = {
 		.freq_accented = 587,
 		.freq_general = 440,
@@ -68,9 +67,10 @@ void _test_default_config(void) {
 		.bpm = 120,
 		.pattern = ">...",
 	};
-	configs_equal(actual, expected);
-	free(actual.presets);
+	struct Config result = get_config();
+	configs_equal(expected, result);
 	free(expected.presets);
+	free(result.presets);
 }
 
 MU_TEST(test_default_config) {
@@ -115,7 +115,6 @@ MU_TEST(test_full_config) {
 	fclose(src);
 	fclose(dst);
 
-	struct Config actual = get_config();
 	struct Config expected = {
 		.freq_accented = 2,
 		.freq_general = 3,
@@ -160,9 +159,10 @@ MU_TEST(test_full_config) {
 		.bpm = 120,
 		.pattern = ">..>..>..>..>..>..>..>..>..>..>",
 	};
-	configs_equal(actual, expected);
-	free(actual.presets);
+	struct Config result = get_config();
+	configs_equal(expected, result);
 	free(expected.presets);
+	free(result.presets);
 }
 
 MU_TEST_SUITE(config_test_suite) {
