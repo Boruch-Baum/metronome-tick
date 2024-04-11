@@ -46,16 +46,15 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 void *_start_player(void* args) {
 	struct PlayerArgs *pa = args;
 	snd_pcm_sframes_t frames;
+	int ret;
 	while (1) {
 		frames = snd_pcm_writei(pa->pcm, pa->buffer, pa->buff_size);
 		if (frames < 0) {
-			frames = snd_pcm_recover(pa->pcm, frames, 0);
-		}
-		if (frames < 0) {
-			fprintf(stderr, "snd_pcm_writei failed: %s\n", snd_strerror(frames));
-			break;
-		} else if (frames < pa->buff_size) {
-			fprintf(stderr, "short write: expected %i, wrote %li\n", pa->buff_size, frames);
+			ret = snd_pcm_recover(pa->pcm, frames, 1);
+			if (ret < 0) {
+				fprintf(stderr, "snd_pcm_recover failed: %s\n", snd_strerror(ret));
+				break;
+			}
 		}
 	}
 	snd_pcm_close(pa->pcm);
