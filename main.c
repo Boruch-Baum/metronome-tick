@@ -10,7 +10,7 @@ int main(void) {
 		.freq_accented = config.freq_accented,
 		.freq_general = config.freq_general,
 	};
-	strncpy(ps.pattern, config.presets[0].pattern, MAX_PATTERN_LEN);
+	memcpy(ps.pattern, config.presets[0].pattern, MAX_PATTERN_LEN);
 
 	pthread_t tid;
 	snd_pcm_t *pcm;

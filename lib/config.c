@@ -58,11 +58,11 @@ void key_to_str(char *dst, char c) {
 void boldify(char *str) {
 	int len = strlen(str);
 	char tmp[len + 1];
-	strncpy(tmp, str, len);
+	memcpy(tmp, str, len);
 	tmp[len] = '\0';
-	strncpy(str, "\033[1m", 4);
-	strncpy(str + 4, tmp, len);
-	strncpy(str + len + 4, "\033[0m", 4);
+	memcpy(str, "\033[1m", 4);
+	memcpy(str + 4, tmp, len);
+	memcpy(str + len + 4, "\033[0m", 4);
 	str[len + 8] = '\0';
 }
 
@@ -122,7 +122,7 @@ struct Config get_config(void) {
 				error = "preset name must be non-empty";
 				goto invalid_config_exit;
 			}
-			strncpy(config.presets[config.presets_size].name, line + 1, pos - line - 1);
+			memcpy(config.presets[config.presets_size].name, line + 1, pos - line - 1);
 			config.presets[config.presets_size].name[pos - line - 1] = '\0';
 			config.presets[config.presets_size].bpm = 0;
 			config.presets[config.presets_size].pattern[0] = '\0';
@@ -150,7 +150,7 @@ struct Config get_config(void) {
 			} else if (strncmp(line, "pattern", pos - line) == 0) {
 				// strnlen - 1 to remove \n if < max len, and leave room for \0 if > max len
 				int len = strnlen(pos + 1, MAX_PATTERN_LEN) - 1;
-				strncpy(config.presets[config.presets_size - 1].pattern, pos + 1, len);
+				memcpy(config.presets[config.presets_size - 1].pattern, pos + 1, len);
 				config.presets[config.presets_size - 1].pattern[len] = '\0';
 			}
 		}
