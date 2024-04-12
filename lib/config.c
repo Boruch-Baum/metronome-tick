@@ -57,13 +57,13 @@ void key_to_str(char *dst, char c) {
 
 void boldify(char *str) {
 	int len = strlen(str);
-	char tmp[len + 1];
+	char tmp[len+1];
 	memcpy(tmp, str, len);
 	tmp[len] = '\0';
 	memcpy(str, "\033[1m", 4);
-	memcpy(str + 4, tmp, len);
-	memcpy(str + len + 4, "\033[0m", 4);
-	str[len + 8] = '\0';
+	memcpy(str+4, tmp, len);
+	memcpy(str+len+4, "\033[0m", 4);
+	str[len+8] = '\0';
 }
 
 FILE *read_config(void) {
@@ -120,44 +120,44 @@ void get_config(struct Config *config) {
 			if (pos == NULL) {
 				error = "unmatched '['";
 				goto invalid_config_exit;
-			} else if (pos - 1 == line) {
+			} else if (pos-1 == line) {
 				error = "preset name must be non-empty";
 				goto invalid_config_exit;
 			}
-			memcpy(config->presets[config->presets_size].name, line + 1, pos - line - 1);
-			config->presets[config->presets_size].name[pos - line - 1] = '\0';
+			memcpy(config->presets[config->presets_size].name, line+1, pos-line-1);
+			config->presets[config->presets_size].name[pos-line-1] = '\0';
 			config->presets[config->presets_size].bpm = 0;
 			config->presets[config->presets_size].pattern[0] = '\0';
 			config->presets_size += 1;
 		} else {
 			char *pos = strchr(line, '=');
-			if (strncmp(line, "freq>", pos - line) == 0) {
-				config->freq_accented = atoi(pos + 1);
-			} else if (strncmp(line, "freq.", pos - line) == 0) {
-				config->freq_general = atoi(pos + 1);
-			} else if (strncmp(line, "interval", pos - line) == 0) {
-				config->interval = atoi(pos + 1);
-			} else if (strncmp(line, "up", pos - line) == 0) {
-				config->keys.up = str_to_key(pos + 1);
-			} else if (strncmp(line, "down", pos - line) == 0) {
-				config->keys.down = str_to_key(pos + 1);
-			} else if (strncmp(line, "next", pos - line) == 0) {
-				config->keys.next = str_to_key(pos + 1);
-			} else if (strncmp(line, "prev", pos - line) == 0) {
-				config->keys.prev = str_to_key(pos + 1);
-			} else if (strncmp(line, "toggle_play", pos - line) == 0) {
-				config->keys.toggle_play = str_to_key(pos + 1);
-			} else if (strncmp(line, "show_prompt", pos - line) == 0) {
-				config->keys.show_prompt = str_to_key(pos + 1);
-			} else if (strncmp(line, "quit", pos - line) == 0) {
-				config->keys.quit = str_to_key(pos + 1);
-			} else if (strncmp(line, "bpm", pos - line) == 0) {
-				config->presets[config->presets_size - 1].bpm = atoi(pos + 1);
-			} else if (strncmp(line, "pattern", pos - line) == 0) {
+			if (strncmp(line, "freq>", pos-line) == 0) {
+				config->freq_accented = atoi(pos+1);
+			} else if (strncmp(line, "freq.", pos-line) == 0) {
+				config->freq_general = atoi(pos+1);
+			} else if (strncmp(line, "interval", pos-line) == 0) {
+				config->interval = atoi(pos+1);
+			} else if (strncmp(line, "up", pos-line) == 0) {
+				config->keys.up = str_to_key(pos+1);
+			} else if (strncmp(line, "down", pos-line) == 0) {
+				config->keys.down = str_to_key(pos+1);
+			} else if (strncmp(line, "next", pos-line) == 0) {
+				config->keys.next = str_to_key(pos+1);
+			} else if (strncmp(line, "prev", pos-line) == 0) {
+				config->keys.prev = str_to_key(pos+1);
+			} else if (strncmp(line, "toggle_play", pos-line) == 0) {
+				config->keys.toggle_play = str_to_key(pos+1);
+			} else if (strncmp(line, "show_prompt", pos-line) == 0) {
+				config->keys.show_prompt = str_to_key(pos+1);
+			} else if (strncmp(line, "quit", pos-line) == 0) {
+				config->keys.quit = str_to_key(pos+1);
+			} else if (strncmp(line, "bpm", pos-line) == 0) {
+				config->presets[config->presets_size-1].bpm = atoi(pos+1);
+			} else if (strncmp(line, "pattern", pos-line) == 0) {
 				// strnlen - 1 to remove \n if < max len, and leave room for \0 if > max len
-				int len = strnlen(pos + 1, MAX_PATTERN_LEN) - 1;
-				memcpy(config->presets[config->presets_size - 1].pattern, pos + 1, len);
-				config->presets[config->presets_size - 1].pattern[len] = '\0';
+				int len = strnlen(pos+1, MAX_PATTERN_LEN) - 1;
+				memcpy(config->presets[config->presets_size-1].pattern, pos+1, len);
+				config->presets[config->presets_size-1].pattern[len] = '\0';
 			}
 		}
 	}
