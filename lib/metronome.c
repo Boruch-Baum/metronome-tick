@@ -1,6 +1,8 @@
 #include "metronome.h"
 #include <pthread.h>
 
+#define UNNAMED_PRESET "\033[3mUnnamed\033[1m"
+
 void init_metronome(struct Metronome *m) {
 	get_config(&m->config);
 	m->ps = (struct PlayerState){
@@ -44,6 +46,7 @@ void stop_metronome(struct Metronome *m) {
 
 void set_bpm(struct Metronome *m, int bpm) {
 	m->ps.bpm = bpm;
+	strcpy(m->preset_name, UNNAMED_PRESET);
 	display_player_state(m);
 	if (m->ps.playing) {
 		start_metronome(m);
