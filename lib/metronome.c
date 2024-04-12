@@ -53,6 +53,15 @@ void set_bpm(struct Metronome *m, int bpm) {
 	}
 }
 
+void set_pattern(struct Metronome *m, char *pattern) {
+	memcpy(m->ps.pattern, pattern, MAX_PATTERN_LEN);
+	strcpy(m->preset_name, UNNAMED_PRESET);
+	display_player_state(m);
+	if (m->ps.playing) {
+		start_metronome(m);
+	}
+}
+
 void set_preset(struct Metronome *m, int preset_index) {
 	m->preset_index = preset_index;
 	apply_preset(m);

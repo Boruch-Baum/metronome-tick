@@ -15,5 +15,6 @@ void apply_preset(struct Metronome *m);
 void start_metronome(struct Metronome *m);
 void stop_metronome(struct Metronome *m);
 void set_bpm(struct Metronome*, int);
+void set_pattern(struct Metronome*, char*);
 void set_preset(struct Metronome*, int);
 void display_player_state(struct Metronome*);

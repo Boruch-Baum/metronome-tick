@@ -25,6 +25,40 @@ int main(void) {
 				start_metronome(&m);
 			}
 		} else if (c == m.config.keys.show_prompt) {
+			char line[MAX_COMMAND_LEN];
+			get_command(line);
+			char *pos = strchr(line, ' ');
+			if (strncmp(line, "bpm", pos - line) == 0) {
+				set_bpm(&m, atoi(pos + 1));
+			} else if (strncmp(line, "pattern", pos - line) == 0) {
+				int len = strnlen(pos + 1, MAX_PATTERN_LEN) - 1;
+				line[8 + len] = '\0';
+				set_pattern(&m, pos + 1);
+			} else if (strncmp(line, "preset", pos - line) == 0) {
+				int found = 0;
+				for (int i = 0; i < m.config.presets_size; i++) {
+					unsigned long len = strlen(m.config.presets[i].name);
+					if (strncmp(m.config.presets[i].name, pos + 1, len) == 0 &&
+							len == strlen(pos + 1) - 1) { // - 1 for '\n'
+						set_preset(&m, i);
+						found = 1;
+					}
+				}
+				if (!found) {
+					printf("Cannot find preset with name %s", pos + 1);
+					fflush(stdout);
+				}
+			} else if (strncmp(line, "set", pos - line) == 0) {
+				char *sep = strchr(pos + 1, '@');
+				if (sep - pos > MAX_PATTERN_LEN) { // sep - (pos + 1) > MAX_PATTERN_LEN - 1
+					printf("Pattern cannot be longer than %d characters", MAX_PATTERN_LEN - 1);
+					fflush(stdout);
+				} else {
+					*sep = '\0';
+					set_pattern(&m, pos + 1);
+					set_bpm(&m, atoi(sep + 1));
+				}
+			}
 		} else if (c == m.config.keys.quit) {
 			stop_metronome(&m);
 			printf("\n");
