@@ -131,32 +131,34 @@ void get_config(struct Config *config) {
 			config->presets_size += 1;
 		} else {
 			char *pos = strchr(line, '=');
-			if (strncmp(line, "freq>", pos-line) == 0) {
-				config->freq_accented = atoi(pos+1);
-			} else if (strncmp(line, "freq.", pos-line) == 0) {
-				config->freq_general = atoi(pos+1);
-			} else if (strncmp(line, "interval", pos-line) == 0) {
-				config->interval = atoi(pos+1);
-			} else if (strncmp(line, "up", pos-line) == 0) {
-				config->keys.up = str_to_key(pos+1);
-			} else if (strncmp(line, "down", pos-line) == 0) {
-				config->keys.down = str_to_key(pos+1);
-			} else if (strncmp(line, "next", pos-line) == 0) {
-				config->keys.next = str_to_key(pos+1);
-			} else if (strncmp(line, "prev", pos-line) == 0) {
-				config->keys.prev = str_to_key(pos+1);
-			} else if (strncmp(line, "toggle_play", pos-line) == 0) {
-				config->keys.toggle_play = str_to_key(pos+1);
-			} else if (strncmp(line, "show_prompt", pos-line) == 0) {
-				config->keys.show_prompt = str_to_key(pos+1);
-			} else if (strncmp(line, "quit", pos-line) == 0) {
-				config->keys.quit = str_to_key(pos+1);
-			} else if (strncmp(line, "bpm", pos-line) == 0) {
-				config->presets[config->presets_size-1].bpm = atoi(pos+1);
-			} else if (strncmp(line, "pattern", pos-line) == 0) {
+			*pos = '\0';
+			pos += 1;
+			if (strcmp(line, "freq>") == 0) {
+				config->freq_accented = atoi(pos);
+			} else if (strcmp(line, "freq.") == 0) {
+				config->freq_general = atoi(pos);
+			} else if (strcmp(line, "interval") == 0) {
+				config->interval = atoi(pos);
+			} else if (strcmp(line, "up") == 0) {
+				config->keys.up = str_to_key(pos);
+			} else if (strcmp(line, "down") == 0) {
+				config->keys.down = str_to_key(pos);
+			} else if (strcmp(line, "next") == 0) {
+				config->keys.next = str_to_key(pos);
+			} else if (strcmp(line, "prev") == 0) {
+				config->keys.prev = str_to_key(pos);
+			} else if (strcmp(line, "toggle_play") == 0) {
+				config->keys.toggle_play = str_to_key(pos);
+			} else if (strcmp(line, "show_prompt") == 0) {
+				config->keys.show_prompt = str_to_key(pos);
+			} else if (strcmp(line, "quit") == 0) {
+				config->keys.quit = str_to_key(pos);
+			} else if (strcmp(line, "bpm") == 0) {
+				config->presets[config->presets_size-1].bpm = atoi(pos);
+			} else if (strcmp(line, "pattern") == 0) {
 				// strnlen - 1 to remove \n if < max len, and leave room for \0 if > max len
-				int len = strnlen(pos+1, MAX_PATTERN_LEN) - 1;
-				memcpy(config->presets[config->presets_size-1].pattern, pos+1, len);
+				int len = strnlen(pos, MAX_PATTERN_LEN) - 1;
+				memcpy(config->presets[config->presets_size-1].pattern, pos, len);
 				config->presets[config->presets_size-1].pattern[len] = '\0';
 			}
 		}
