@@ -106,7 +106,7 @@ void get_config(struct Config *config) {
 	}
 
 	char line[MAX_LINE_LEN];
-	char *error;
+	char error[MAX_LINE_LEN+19]; // 19 = "unrecognized key ''"
 	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
 		if (line[0] == '#' || line[0] == '\n') {
 			continue;
@@ -118,10 +118,10 @@ void get_config(struct Config *config) {
 			}
 			char *pos = strrchr(line, ']');
 			if (pos == NULL) {
-				error = "unmatched '['";
+				strcpy(error, "unmatched '['");
 				goto invalid_config_exit;
 			} else if (pos-1 == line) {
-				error = "preset name must be non-empty";
+				strcpy(error, "preset name must be non-empty");
 				goto invalid_config_exit;
 			}
 			memcpy(config->presets[config->presets_size].name, line+1, pos-line-1);
@@ -131,6 +131,10 @@ void get_config(struct Config *config) {
 			config->presets_size += 1;
 		} else {
 			char *pos = strchr(line, '=');
+			if (pos == NULL) {
+				strcpy(error, "expect key=value");
+				goto invalid_config_exit;
+			}
 			*pos = '\0';
 			pos += 1;
 			if (strcmp(line, "freq>") == 0) {
@@ -160,6 +164,9 @@ void get_config(struct Config *config) {
 				int len = strnlen(pos, MAX_PATTERN_LEN) - 1;
 				memcpy(config->presets[config->presets_size-1].pattern, pos, len);
 				config->presets[config->presets_size-1].pattern[len] = '\0';
+			} else {
+				sprintf(error, "unrecognized key '%s'", line);
+				goto invalid_config_exit;
 			}
 		}
 	}
