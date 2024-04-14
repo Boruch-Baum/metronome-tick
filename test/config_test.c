@@ -29,6 +29,13 @@ void configs_equal(struct Config c1, struct Config c2) {
 	}
 }
 
+void write_file(char *path, char *str) {
+	FILE *file = fopen(path, "w");
+	assert(file != NULL);
+	fprintf(file, "%s", str);
+	fclose(file);
+}
+
 void config_test_setup(void) {
 	mkdir("/fakehome", 0775);
 	mkdir("/fakehome/.config", 0775);
@@ -36,16 +43,8 @@ void config_test_setup(void) {
 	mkdir("/home/fakeuser", 0775);
 	mkdir("/home/fakeuser/.config", 0775);
 	mkdir("/home/fakeuser/.config/tick", 0775);
-
-	FILE *file = fopen("/fakehome/.config/tick/tick.ini", "w");
-	assert(file != NULL);
-	fprintf(file, "freq>=1\n");
-	fclose(file);
-
-	file = fopen("/home/fakeuser/.config/tick/tick.ini", "w");
-	assert(file != NULL);
-	fprintf(file, "freq>=2\n");
-	fclose(file);
+	write_file("/fakehome/.config/tick/tick.ini", "freq>=1\n");
+	write_file("/home/fakeuser/.config/tick/tick.ini", "freq>=2\n");
 }
 
 void config_test_teardown(void) {
@@ -223,13 +222,6 @@ void fork_get_config(char *output) {
 		mu_assert_int_eq(WEXITSTATUS(status), 1);
 		read(pipefd[0], output, MAX_ERROR_LEN);
 	}
-}
-
-void write_file(char *path, char *str) {
-	FILE *file = fopen(path, "w");
-	assert(file != NULL);
-	fprintf(file, "%s", str);
-	fclose(file);
 }
 
 MU_TEST(test_unmatched_bracket) {
