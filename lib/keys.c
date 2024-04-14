@@ -2,19 +2,19 @@
 #include <string.h>
 
 char str_to_key(char *str) {
-	if (strcmp(str, "up") == 0) {
+	if (strcmp(str, "up\n") == 0) {
 		return UP_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "down") == 0) {
+	} else if (strcmp(str, "down\n") == 0) {
 		return DOWN_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "right") == 0) {
+	} else if (strcmp(str, "right\n") == 0) {
 		return RIGHT_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "left") == 0) {
+	} else if (strcmp(str, "left\n") == 0) {
 		return LEFT_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "tab") == 0) {
+	} else if (strcmp(str, "tab\n") == 0) {
 		return 9;
-	} else if (strcmp(str, "enter") == 0) {
+	} else if (strcmp(str, "enter\n") == 0) {
 		return 13;
-	} else if (strcmp(str, "space") == 0) {
+	} else if (strcmp(str, "space\n") == 0) {
 		return 32;
 	} else {
 		return str[0];
