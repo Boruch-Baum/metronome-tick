@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
+
+#define MAX_ERROR_LEN (MAX_LINE_LEN + 19 + 24) // error len + 24 from "Invalid configuration: \n"
 
 void configs_equal(struct Config c1, struct Config c2) {
 	mu_assert_int_eq(c1.freq_accented, c2.freq_accented);
@@ -26,7 +29,7 @@ void configs_equal(struct Config c1, struct Config c2) {
 	}
 }
 
-void test_setup(void) {
+void config_test_setup(void) {
 	mkdir("/fakehome", 0775);
 	mkdir("/fakehome/.config", 0775);
 	mkdir("/fakehome/.config/tick", 0775);
@@ -45,8 +48,18 @@ void test_setup(void) {
 	fclose(file);
 }
 
-void test_teardown(void) {
+void config_test_teardown(void) {
 	system("rm -r /fakehome /home/fakeuser");
+}
+
+void invalid_config_test_setup(void) {
+	mkdir("/home/fakeuser", 0755);
+	mkdir("/home/fakeuser/.config", 0755);
+	mkdir("/home/fakeuser/.config/tick", 0755);
+}
+
+void invalid_config_test_teardown(void) {
+	system("rm -r /home/fakeuser");
 }
 
 void _test_default_config(void) {
@@ -176,16 +189,89 @@ MU_TEST(test_full_config) {
 }
 
 MU_TEST_SUITE(config_test_suite) {
-	MU_SUITE_CONFIGURE(&test_setup, &test_teardown);
+	MU_SUITE_CONFIGURE(&config_test_setup, &config_test_teardown);
 	MU_RUN_TEST(test_xdg_config_home);
 	MU_RUN_TEST(test_no_xdg_config_home);
 	MU_RUN_TEST(test_no_home);
 	MU_RUN_TEST(test_full_config);
 }
 
+void fork_get_config(char *output) {
+	int pipefd[2];
+	if (pipe(pipefd) == -1) {
+		perror("pipe");
+		exit(1);
+	}
+
+	pid_t pid = fork();
+	if (pid == -1) {
+		perror("fork");
+		exit(1);
+	}
+
+	if (pid == 0) {
+		close(pipefd[0]);
+		dup2(pipefd[1], STDERR_FILENO);
+		close(pipefd[1]);
+		struct Config config;
+		get_config(&config);
+	} else {
+		close(pipefd[1]);
+		int status;
+		waitpid(pid, &status, 0);
+		mu_assert(WIFEXITED(status), "get_config exited normally");
+		mu_assert_int_eq(WEXITSTATUS(status), 1);
+		read(pipefd[0], output, MAX_ERROR_LEN);
+	}
+}
+
+void write_file(char *path, char *str) {
+	FILE *file = fopen(path, "w");
+	assert(file != NULL);
+	fprintf(file, "%s", str);
+	fclose(file);
+}
+
+MU_TEST(test_unmatched_bracket) {
+	write_file("/home/fakeuser/.config/tick/tick.ini", "[preset name\n");
+	char output[MAX_ERROR_LEN];
+	fork_get_config(output);
+	mu_assert_string_eq("Invalid configuration: unmatched '['\n", output);
+}
+
+MU_TEST(test_empty_preset_name) {
+	write_file("/home/fakeuser/.config/tick/tick.ini", "[]\n");
+	char output[MAX_ERROR_LEN];
+	fork_get_config(output);
+	mu_assert_string_eq("Invalid configuration: preset name must be non-empty\n", output);
+}
+
+MU_TEST(test_missing_equal_sign) {
+	write_file("/home/fakeuser/.config/tick/tick.ini", "freq> 23\n");
+	char output[MAX_ERROR_LEN];
+	fork_get_config(output);
+	mu_assert_string_eq("Invalid configuration: expect key=value\n", output);
+}
+
+MU_TEST(test_unrecognized_key) {
+	write_file("/home/fakeuser/.config/tick/tick.ini", "freq=23\n");
+	char output[MAX_ERROR_LEN];
+	fork_get_config(output);
+	mu_assert_string_eq("Invalid configuration: unrecognized key 'freq'\n", output);
+}
+
+MU_TEST_SUITE(invalid_config_test_suite) {
+	MU_SUITE_CONFIGURE(&invalid_config_test_setup, &invalid_config_test_teardown);
+	MU_RUN_TEST(test_unmatched_bracket);
+	MU_RUN_TEST(test_empty_preset_name);
+	MU_RUN_TEST(test_missing_equal_sign);
+	MU_RUN_TEST(test_unrecognized_key);
+}
+
 int config_test_suites(void) {
 	MU_RUN_SUITE(default_config_test_suite);
 	MU_RUN_SUITE(config_test_suite);
+	MU_RUN_SUITE(invalid_config_test_suite);
 	MU_REPORT();
 	return MU_EXIT_CODE;
 }
