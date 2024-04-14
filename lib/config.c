@@ -9,63 +9,6 @@
 #define INIT_PRESETS_CAPACITY 2
 #define MAX_KEY_STR_LEN 20 // "right arrow\0" + 8 escape characters from bolding
 
-char str_to_key(char *str) {
-	if (strcmp(str, "up") == 0) {
-		return UP_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "down") == 0) {
-		return DOWN_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "right") == 0) {
-		return RIGHT_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "left") == 0) {
-		return LEFT_ARROW_SUBSTITUTION;
-	} else if (strcmp(str, "tab") == 0) {
-		return 9;
-	} else if (strcmp(str, "enter") == 0) {
-		return 13;
-	} else if (strcmp(str, "space") == 0) {
-		return 32;
-	} else {
-		return str[0];
-	}
-}
-
-void key_to_str(char *dst, char c) {
-	switch (c) {
-	case UP_ARROW_SUBSTITUTION:
-		strcpy(dst, "up arrow");
-		break;
-	case DOWN_ARROW_SUBSTITUTION:
-		strcpy(dst, "down arrow");
-		break;
-	case RIGHT_ARROW_SUBSTITUTION:
-		strcpy(dst, "right arrow");
-		break;
-	case LEFT_ARROW_SUBSTITUTION:
-		strcpy(dst, "left arrow");
-		break;
-	case 13:
-		strcpy(dst, "enter");
-		break;
-	case 32:
-		strcpy(dst, "space");
-		break;
-	default:
-		dst[0] = c;
-		dst[1] = '\0';
-	}
-}
-
-void boldify(char *str) {
-	int len = strlen(str);
-	char tmp[len+1];
-	memcpy(tmp, str, len);
-	tmp[len] = '\0';
-	memcpy(str, "\033[1m", 4);
-	memcpy(str+4, tmp, len);
-	memcpy(str+len+4, "\033[0m", 4);
-	str[len+8] = '\0';
-}
-
 FILE *read_config(void) {
 	char config_path[PATH_MAX];
 	const char *XDG_CONFIG_HOME = getenv("XDG_CONFIG_HOME");
@@ -184,6 +127,17 @@ invalid_config_exit:
 	fclose(file);
 	free(config->presets);
 	exit(EXIT_FAILURE);
+}
+
+void boldify(char *str) {
+	int len = strlen(str);
+	char tmp[len+1];
+	memcpy(tmp, str, len);
+	tmp[len] = '\0';
+	memcpy(str, "\033[1m", 4);
+	memcpy(str+4, tmp, len);
+	memcpy(str+len+4, "\033[0m", 4);
+	str[len+8] = '\0';
 }
 
 void display_keybinds(struct Config *c) {
