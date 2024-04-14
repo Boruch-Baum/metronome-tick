@@ -35,5 +35,8 @@ $(RELEASE_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(RELEASE_CFLAGS) -MMD -MP -c $< -o $@
 
+run: build
+	@./$(DEBUG_DIR)/$(TARGET_NAME)
+
 clean:
 	rm -rf $(TARGET_DIR)
