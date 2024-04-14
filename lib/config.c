@@ -108,9 +108,6 @@ void get_config(struct Config *config) {
 	char line[MAX_LINE_LEN];
 	char error[MAX_LINE_LEN+19]; // 19 = "unrecognized key ''"
 	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
-		if (line[0] == '#' || line[0] == '\n') {
-			continue;
-		}
 		if (line[0] == '[') {
 			if (config->presets_size == presets_capacity) {
 				presets_capacity *= 2;
@@ -129,7 +126,7 @@ void get_config(struct Config *config) {
 			config->presets[config->presets_size].bpm = 0;
 			config->presets[config->presets_size].pattern[0] = '\0';
 			config->presets_size += 1;
-		} else {
+		} else if (line[0] != '#' && line[0] != '\n') {
 			char *pos = strchr(line, '=');
 			if (pos == NULL) {
 				strcpy(error, "expect key=value");
