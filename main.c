@@ -67,5 +67,5 @@ int main(void) {
 	}
 	free(m.pa.buffer);
 	free(m.config.presets);
-	return 0;
+	return EXIT_SUCCESS;
 }

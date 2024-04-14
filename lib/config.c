@@ -183,7 +183,7 @@ invalid_config_exit:
 	fprintf(stderr, "Invalid configuration: %s\n", error);
 	fclose(file);
 	free(config->presets);
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 void display_keybinds(struct Config *c) {

@@ -200,13 +200,13 @@ void fork_get_config(char *output) {
 	int pipefd[2];
 	if (pipe(pipefd) == -1) {
 		perror("pipe");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	pid_t pid = fork();
 	if (pid == -1) {
 		perror("fork");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	if (pid == 0) {

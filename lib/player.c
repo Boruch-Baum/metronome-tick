@@ -7,7 +7,7 @@ void prepare_player(snd_pcm_t **pcm) {
 	int rc = snd_pcm_open(pcm, "default", SND_PCM_STREAM_PLAYBACK, 0);
 	if (rc) {
 		fprintf(stderr, "unable to open pcm device: %s\n", snd_strerror(rc));
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	snd_pcm_set_params(*pcm,
 		SND_PCM_FORMAT_U8,
