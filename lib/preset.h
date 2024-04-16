@@ -17,3 +17,4 @@ struct Presets {
 
 void get_presets(struct Presets*);
 void add_preset(struct Presets*, struct Preset*);
+void write_preset(struct Preset*);

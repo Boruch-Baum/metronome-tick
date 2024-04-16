@@ -24,9 +24,24 @@ int main(void) {
 			} else {
 				start_metronome(&m);
 			}
+		} else if (c == m.config.keys.save) {
+			char preset_name[MAX_PRESET_NAME_LEN];
+			get_command(preset_name, "Preset name: ");
+			char *pos = strrchr(preset_name, '\n');
+			if (pos == NULL) {
+				printf("Preset name cannot be longer than %d characters\n", MAX_PRESET_NAME_LEN-1);
+			} else {
+				*pos = '\0';
+			}
+			struct Preset preset = { .bpm = m.ps.bpm };
+			memcpy(preset.name, preset_name, MAX_PRESET_NAME_LEN);
+			memcpy(preset.pattern, m.ps.pattern, MAX_PATTERN_LEN);
+			add_preset(&m.presets, &preset);
+			write_preset(&preset);
+			set_preset(&m, m.presets.size - 1);
 		} else if (c == m.config.keys.show_prompt) {
 			char line[MAX_COMMAND_LEN];
-			get_command(line);
+			get_command(line, ":");
 			char *pos = strchr(line, ' ');
 			if (strncmp(line, "bpm", pos-line) == 0) {
 				set_bpm(&m, atoi(pos+1));

@@ -43,11 +43,11 @@ int get_input(void) {
 	}
 }
 
-void get_command(char *line) {
-	printf("\n:");
+void get_command(char *line, char *prompt) {
+	printf("\n%s", prompt);
 	fflush(stdout);
 	reset_terminal_mode();
-	fgets(line, MAX_COMMAND_LEN, stdin);
+	fgets(line, sizeof(line), stdin);
 	printf("\033[A\33[2K\033[A\33[2K"); // https://stackoverflow.com/a/35190285/10254049
 	prepare_for_input();
 	// TODO handle SIGINT

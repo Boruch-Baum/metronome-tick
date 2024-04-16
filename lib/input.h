@@ -2,4 +2,4 @@
 
 void prepare_for_input(void);
 int get_input(void);
-void get_command(char*);
+void get_command(char*, char*);

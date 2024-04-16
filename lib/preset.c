@@ -13,6 +13,12 @@ void add_preset(struct Presets *presets, struct Preset *preset) {
 	presets->size += 1;
 }
 
+void write_preset(struct Preset *preset) {
+	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
+	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", preset->name, preset->bpm, preset->pattern);
+	write_xdg_file("XDG_DATA_HOME", ".local/share", "tick/presets.ini", str);
+}
+
 void process_presets_file(struct Presets *presets, FILE *file) {
 	char line[MAX_LINE_LEN];
 	char error[MAX_LINE_LEN+18]; // 19 from "unrecognized key ''" - 1 from "="
