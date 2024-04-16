@@ -1,11 +1,13 @@
 #include "config.h"
 #include "player.h"
+#include "preset.h"
 
 struct Metronome {
 	pthread_t tid;
 	struct PlayerArgs pa;
 	struct PlayerState ps;
 	struct Config config;
+	struct Presets presets;
 	int preset_index;
 	char preset_name[MAX_PRESET_NAME_LEN];
 };

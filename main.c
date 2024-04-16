@@ -15,9 +15,9 @@ int main(void) {
 		} else if (c == m.config.keys.down) {
 			set_bpm(&m, m.ps.bpm-m.config.interval);
 		} else if (c == m.config.keys.next) {
-			set_preset(&m, (m.preset_index+1)%m.config.presets_size);
+			set_preset(&m, (m.preset_index+1)%m.presets.size);
 		} else if (c == m.config.keys.prev) {
-			set_preset(&m, (m.preset_index+m.config.presets_size-1)% m.config.presets_size);
+			set_preset(&m, (m.preset_index+m.presets.size-1)% m.presets.size);
 		} else if (c == m.config.keys.toggle_play) {
 			if (m.ps.playing) {
 				stop_metronome(&m);
@@ -36,9 +36,9 @@ int main(void) {
 				set_pattern(&m, pos+1);
 			} else if (strncmp(line, "preset", pos-line) == 0) {
 				int found = 0;
-				for (int i = 0; i < m.config.presets_size; i++) {
-					unsigned long len = strlen(m.config.presets[i].name);
-					if (strncmp(m.config.presets[i].name, pos+1, len) == 0 &&
+				for (int i = 0; i < m.presets.size; i++) {
+					unsigned long len = strlen(m.presets.items[i].name);
+					if (strncmp(m.presets.items[i].name, pos+1, len) == 0 &&
 							len == strlen(pos+1) - 1) { // - 1 for '\n'
 						set_preset(&m, i);
 						found = 1;
@@ -66,6 +66,6 @@ int main(void) {
 		}
 	}
 	free(m.pa.buffer);
-	free(m.config.presets);
+	free(m.presets.items);
 	return EXIT_SUCCESS;
 }

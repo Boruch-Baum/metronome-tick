@@ -1,31 +1,59 @@
 #include "config.h"
+#include "files.h"
 #include "keys.h"
-#include <limits.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 
-#define INIT_PRESETS_CAPACITY 2
 #define MAX_KEY_STR_LEN 20 // "right arrow\0" + 8 escape characters from bolding
 
-FILE *read_config(void) {
-	char config_path[PATH_MAX];
-	const char *XDG_CONFIG_HOME = getenv("XDG_CONFIG_HOME");
-	if (XDG_CONFIG_HOME == NULL || XDG_CONFIG_HOME[0] == '\0') {
-		const char *HOME = getenv("HOME");
-		if (HOME == NULL || HOME[0] == '\0') {
-			return NULL;
+void process_config_file(struct Config *config, FILE *file) {
+	char line[MAX_LINE_LEN];
+	char error[MAX_LINE_LEN+18]; // 19 from "unrecognized key ''" - 1 from "="
+	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
+		if (line[0] == '#' && line[0] == '\n') {
+			continue;
 		}
-		snprintf(config_path, PATH_MAX, "%s/.config/tick/tick.ini", HOME);
-	} else {
-		snprintf(config_path, PATH_MAX, "%s/tick/tick.ini", XDG_CONFIG_HOME);
+		char *pos = strchr(line, '=');
+		if (pos == NULL) {
+			strcpy(error, "expect key=value");
+			goto invalid_config_exit;
+		}
+		*pos = '\0';
+		pos += 1;
+		if (strcmp(line, "freq>") == 0) {
+			config->freq_accented = atoi(pos);
+		} else if (strcmp(line, "freq.") == 0) {
+			config->freq_general = atoi(pos);
+		} else if (strcmp(line, "interval") == 0) {
+			config->interval = atoi(pos);
+		} else if (strcmp(line, "up") == 0) {
+			config->keys.up = str_to_key(pos);
+		} else if (strcmp(line, "down") == 0) {
+			config->keys.down = str_to_key(pos);
+		} else if (strcmp(line, "next") == 0) {
+			config->keys.next = str_to_key(pos);
+		} else if (strcmp(line, "prev") == 0) {
+			config->keys.prev = str_to_key(pos);
+		} else if (strcmp(line, "toggle_play") == 0) {
+			config->keys.toggle_play = str_to_key(pos);
+		} else if (strcmp(line, "show_prompt") == 0) {
+			config->keys.show_prompt = str_to_key(pos);
+		} else if (strcmp(line, "quit") == 0) {
+			config->keys.quit = str_to_key(pos);
+		} else {
+			sprintf(error, "unrecognized key '%s'", line);
+			goto invalid_config_exit;
+		}
 	}
-	return fopen(config_path, "r");
+	return;
+
+invalid_config_exit:
+	fclose(file);
+	fprintf(stderr, "Invalid configuration: %s\n", error);
+	exit(EXIT_FAILURE);
 }
 
 void get_config(struct Config *config) {
-	int presets_capacity = INIT_PRESETS_CAPACITY;
 	*config = (struct Config){
 		.freq_accented = 587,
 		.freq_general = 440,
@@ -39,94 +67,12 @@ void get_config(struct Config *config) {
 			.show_prompt = ':',
 			.quit = 'q',
 		},
-		.presets_size = 0,
-		.presets = malloc(sizeof(struct Preset) * presets_capacity),
 	};
-
-	FILE *file = read_config();
-	if (file == NULL) {
-		goto fill_return;
+	FILE *file = read_xdg_file("XDG_CONFIG_HOME", ".config", "tick/tick.ini");
+	if (file != NULL) {
+		process_config_file(config, file);
+		fclose(file);
 	}
-
-	char line[MAX_LINE_LEN];
-	char error[MAX_LINE_LEN+19]; // 19 = "unrecognized key ''"
-	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
-		if (line[0] == '[') {
-			if (config->presets_size == presets_capacity) {
-				presets_capacity *= 2;
-				config->presets = realloc(config->presets, sizeof(struct Preset) * presets_capacity);
-			}
-			char *pos = strrchr(line, ']');
-			if (pos == NULL) {
-				strcpy(error, "unmatched '['");
-				goto invalid_config_exit;
-			} else if (pos-1 == line) {
-				strcpy(error, "preset name must be non-empty");
-				goto invalid_config_exit;
-			}
-			memcpy(config->presets[config->presets_size].name, line+1, pos-line-1);
-			config->presets[config->presets_size].name[pos-line-1] = '\0';
-			config->presets[config->presets_size].bpm = 0;
-			config->presets[config->presets_size].pattern[0] = '\0';
-			config->presets_size += 1;
-		} else if (line[0] != '#' && line[0] != '\n') {
-			char *pos = strchr(line, '=');
-			if (pos == NULL) {
-				strcpy(error, "expect key=value");
-				goto invalid_config_exit;
-			}
-			*pos = '\0';
-			pos += 1;
-			if (strcmp(line, "freq>") == 0) {
-				config->freq_accented = atoi(pos);
-			} else if (strcmp(line, "freq.") == 0) {
-				config->freq_general = atoi(pos);
-			} else if (strcmp(line, "interval") == 0) {
-				config->interval = atoi(pos);
-			} else if (strcmp(line, "up") == 0) {
-				config->keys.up = str_to_key(pos);
-			} else if (strcmp(line, "down") == 0) {
-				config->keys.down = str_to_key(pos);
-			} else if (strcmp(line, "next") == 0) {
-				config->keys.next = str_to_key(pos);
-			} else if (strcmp(line, "prev") == 0) {
-				config->keys.prev = str_to_key(pos);
-			} else if (strcmp(line, "toggle_play") == 0) {
-				config->keys.toggle_play = str_to_key(pos);
-			} else if (strcmp(line, "show_prompt") == 0) {
-				config->keys.show_prompt = str_to_key(pos);
-			} else if (strcmp(line, "quit") == 0) {
-				config->keys.quit = str_to_key(pos);
-			} else if (strcmp(line, "bpm") == 0) {
-				config->presets[config->presets_size-1].bpm = atoi(pos);
-			} else if (strcmp(line, "pattern") == 0) {
-				// strnlen - 1 to remove \n if < max len, and leave room for \0 if > max len
-				int len = strnlen(pos, MAX_PATTERN_LEN) - 1;
-				memcpy(config->presets[config->presets_size-1].pattern, pos, len);
-				config->presets[config->presets_size-1].pattern[len] = '\0';
-			} else {
-				sprintf(error, "unrecognized key '%s'", line);
-				goto invalid_config_exit;
-			}
-		}
-	}
-	fclose(file);
-
-fill_return:
-	if (config->presets_size == 0) {
-		config->presets[0] = (struct Preset){
-			.name = "Default",
-			.bpm = 120,
-			.pattern = ">...",
-		};
-		config->presets_size = 1;
-	}
-	return;
-invalid_config_exit:
-	fprintf(stderr, "Invalid configuration: %s\n", error);
-	fclose(file);
-	free(config->presets);
-	exit(EXIT_FAILURE);
 }
 
 void boldify(char *str) {

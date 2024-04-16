@@ -5,6 +5,7 @@
 
 void init_metronome(struct Metronome *m) {
 	get_config(&m->config);
+	get_presets(&m->presets);
 	m->ps = (struct PlayerState){
 		.playing = 0,
 		.freq_accented = m->config.freq_accented,
@@ -22,9 +23,9 @@ void init_metronome(struct Metronome *m) {
 }
 
 void apply_preset(struct Metronome *m) {
-	m->ps.bpm = m->config.presets[m->preset_index].bpm;
-	memcpy(m->ps.pattern, m->config.presets[m->preset_index].pattern, MAX_PATTERN_LEN);
-	memcpy(m->preset_name, m->config.presets[m->preset_index].name, MAX_PRESET_NAME_LEN);
+	m->ps.bpm = m->presets.items[m->preset_index].bpm;
+	memcpy(m->ps.pattern, m->presets.items[m->preset_index].pattern, MAX_PATTERN_LEN);
+	memcpy(m->preset_name, m->presets.items[m->preset_index].name, MAX_PRESET_NAME_LEN);
 }
 
 void start_metronome(struct Metronome *m) {
