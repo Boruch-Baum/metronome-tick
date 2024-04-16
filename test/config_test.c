@@ -5,17 +5,18 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-void configs_equal(struct Config c1, struct Config c2) {
-	mu_assert_int_eq(c1.freq_accented, c2.freq_accented);
-	mu_assert_int_eq(c1.freq_general, c2.freq_general);
-	mu_assert_int_eq(c1.interval, c2.interval);
-	mu_assert_int_eq(c1.keys.up, c2.keys.up);
-	mu_assert_int_eq(c1.keys.down, c2.keys.down);
-	mu_assert_int_eq(c1.keys.next, c2.keys.next);
-	mu_assert_int_eq(c1.keys.prev, c2.keys.prev);
-	mu_assert_int_eq(c1.keys.toggle_play, c2.keys.toggle_play);
-	mu_assert_int_eq(c1.keys.show_prompt, c2.keys.show_prompt);
-	mu_assert_int_eq(c1.keys.quit, c2.keys.quit);
+void configs_equal(struct Config *c1, struct Config *c2) {
+	mu_assert_int_eq(c1->freq_accented, c2->freq_accented);
+	mu_assert_int_eq(c1->freq_general, c2->freq_general);
+	mu_assert_int_eq(c1->interval, c2->interval);
+	mu_assert_int_eq(c1->keys.up, c2->keys.up);
+	mu_assert_int_eq(c1->keys.down, c2->keys.down);
+	mu_assert_int_eq(c1->keys.next, c2->keys.next);
+	mu_assert_int_eq(c1->keys.prev, c2->keys.prev);
+	mu_assert_int_eq(c1->keys.toggle_play, c2->keys.toggle_play);
+	mu_assert_int_eq(c1->keys.save, c2->keys.save);
+	mu_assert_int_eq(c1->keys.show_prompt, c2->keys.show_prompt);
+	mu_assert_int_eq(c1->keys.quit, c2->keys.quit);
 }
 
 void _test_default_config(void) {
@@ -35,7 +36,7 @@ void _test_default_config(void) {
 	};
 	struct Config result;
 	get_config(&result);
-	configs_equal(expected, result);
+	configs_equal(&expected, &result);
 }
 
 MU_TEST(test_default_config) {
@@ -101,7 +102,7 @@ MU_TEST(test_full_config) {
 	};
 	struct Config result;
 	get_config(&result);
-	configs_equal(expected, result);
+	configs_equal(&expected, &result);
 }
 
 MU_TEST_SUITE(config_test_suite) {
