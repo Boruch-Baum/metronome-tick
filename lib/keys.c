@@ -10,6 +10,10 @@ char str_to_key(char *str) {
 		return RIGHT_ARROW_SUBSTITUTION;
 	} else if (strcmp(str, "left\n") == 0) {
 		return LEFT_ARROW_SUBSTITUTION;
+	} else if (strcmp(str, "delete\n") == 0) {
+		return DELETE_KEY_SUBSTITUTION;
+	} else if (strcmp(str, "backspace\n") == 0) {
+		return BACKSPACE_KEY;
 	} else if (strcmp(str, "tab\n") == 0) {
 		return TAB_KEY;
 	} else if (strcmp(str, "enter\n") == 0) {
@@ -34,6 +38,12 @@ void key_to_str(char *dst, char c) {
 		break;
 	case LEFT_ARROW_SUBSTITUTION:
 		strcpy(dst, "left arrow");
+		break;
+	case DELETE_KEY_SUBSTITUTION:
+		strcpy(dst, "delete");
+		break;
+	case BACKSPACE_KEY:
+		strcpy(dst, "backspace");
 		break;
 	case TAB_KEY:
 		strcpy(dst, "tab");

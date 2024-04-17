@@ -35,6 +35,13 @@ int get_input(void) {
 			return RIGHT_ARROW_SUBSTITUTION;
 		case 'D':
 			return LEFT_ARROW_SUBSTITUTION;
+		case '3':
+			c = getchar();
+			if (c == '~') {
+				return DELETE_KEY_SUBSTITUTION;
+			} else {
+				return c;
+			}
 		default:
 			return c;
 		}
