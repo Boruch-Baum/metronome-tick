@@ -35,6 +35,9 @@ void key_to_str(char *dst, char c) {
 	case LEFT_ARROW_SUBSTITUTION:
 		strcpy(dst, "left arrow");
 		break;
+	case TAB_KEY:
+		strcpy(dst, "tab");
+		break;
 	case ENTER_KEY:
 		strcpy(dst, "enter");
 		break;
