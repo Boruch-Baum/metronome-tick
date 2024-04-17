@@ -11,11 +11,11 @@ char str_to_key(char *str) {
 	} else if (strcmp(str, "left\n") == 0) {
 		return LEFT_ARROW_SUBSTITUTION;
 	} else if (strcmp(str, "tab\n") == 0) {
-		return 9;
+		return TAB_KEY;
 	} else if (strcmp(str, "enter\n") == 0) {
-		return 13;
+		return ENTER_KEY;
 	} else if (strcmp(str, "space\n") == 0) {
-		return 32;
+		return SPACE_KEY;
 	} else {
 		return str[0];
 	}
@@ -35,10 +35,10 @@ void key_to_str(char *dst, char c) {
 	case LEFT_ARROW_SUBSTITUTION:
 		strcpy(dst, "left arrow");
 		break;
-	case 13:
+	case ENTER_KEY:
 		strcpy(dst, "enter");
 		break;
-	case 32:
+	case SPACE_KEY:
 		strcpy(dst, "space");
 		break;
 	default:
