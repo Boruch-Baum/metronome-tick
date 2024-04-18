@@ -22,7 +22,7 @@ FILE *read_xdg_file(char *xdg_dir, char *default_dir, char *subpath) {
 	return fopen(path, "r");
 }
 
-void write_xdg_file(char *xdg_dir, char *default_dir, char *subpath, char *data) {
+void append_xdg_file(char *xdg_dir, char *default_dir, char *subpath, char *data) {
 	char path[PATH_MAX];
 	get_xdg_path(path, xdg_dir, default_dir, subpath);
 	FILE *file = fopen(path, "a");

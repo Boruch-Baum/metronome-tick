@@ -31,7 +31,7 @@ int main(void) {
 			memcpy(preset.name, preset_name, MAX_PRESET_NAME_LEN);
 			memcpy(preset.pattern, m.ps.pattern, MAX_PATTERN_LEN);
 			add_preset(&m.presets, &preset);
-			write_preset(&preset);
+			append_preset(&preset);
 			set_preset(&m, m.presets.size - 1);
 		} else if (c == m.config.keys.show_prompt) {
 			char line[MAX_COMMAND_LEN];
