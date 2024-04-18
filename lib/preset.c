@@ -32,7 +32,7 @@ void process_presets_file(struct Presets *presets, FILE *file) {
 				strcpy(error, "preset name must be non-empty");
 				goto invalid_config_exit;
 			}
-			struct Preset preset = { .bpm = 0, .pattern = "" };
+			struct Preset preset = { .bpm = 120, .pattern = "" };
 			memcpy(preset.name, line+1, pos-line-1);
 			add_preset(presets, &preset);
 		} else if (line[0] != '\n') {

@@ -32,12 +32,16 @@ void start_metronome(struct Metronome *m) {
 	if (m->ps.playing) {
 		pthread_cancel(m->tid);
 	}
-	if (m->pa.buffer) {
-		free(m->pa.buffer);
+	if (m->ps.bpm <= 0) {
+		printf("\nBPM cannot be <= 0\n");
+	} else {
+		if (m->pa.buffer) {
+			free(m->pa.buffer);
+		}
+		m->pa.buffer = create_waves(&m->pa.buff_size, &m->ps);
+		pthread_create(&m->tid, NULL, start_player, &m->pa);
+		m->ps.playing = 1;
 	}
-	m->pa.buffer = create_waves(&m->pa.buff_size, &m->ps);
-	pthread_create(&m->tid, NULL, start_player, &m->pa);
-	m->ps.playing = 1;
 }
 
 void stop_metronome(struct Metronome *m) {
