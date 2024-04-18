@@ -27,12 +27,6 @@ int main(void) {
 		} else if (c == m.config.keys.add) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
-			char *pos = strrchr(preset_name, '\n');
-			if (pos == NULL) {
-				printf("Preset name cannot be longer than %d characters\n", MAX_PRESET_NAME_LEN-1);
-			} else {
-				*pos = '\0';
-			}
 			struct Preset preset = { .bpm = m.ps.bpm };
 			memcpy(preset.name, preset_name, MAX_PRESET_NAME_LEN);
 			memcpy(preset.pattern, m.ps.pattern, MAX_PATTERN_LEN);
@@ -50,9 +44,7 @@ int main(void) {
 			} else if (strncmp(line, "preset", pos-line) == 0) {
 				int found = 0;
 				for (int i = 0; i < m.presets.size; i++) {
-					unsigned long len = strlen(m.presets.items[i].name);
-					if (strncmp(m.presets.items[i].name, pos+1, len) == 0 &&
-							len == strlen(pos+1) - 1) { // - 1 for '\n'
+					if (strcmp(m.presets.items[i].name, pos+1) == 0) {
 						set_preset(&m, i);
 						found = 1;
 					}
