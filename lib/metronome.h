@@ -12,7 +12,6 @@ struct Metronome {
 };
 
 void init_metronome(struct Metronome *m);
-void apply_preset(struct Metronome *m);
 void start_metronome(struct Metronome *m);
 void stop_metronome(struct Metronome *m);
 void set_bpm(struct Metronome*, int);

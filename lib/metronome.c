@@ -1,6 +1,11 @@
 #include "metronome.h"
 #include <pthread.h>
 
+void apply_preset(struct Metronome *m) {
+	m->ps.bpm = m->presets.items[m->preset_index].bpm;
+	memcpy(m->ps.pattern, m->presets.items[m->preset_index].pattern, MAX_PATTERN_LEN);
+}
+
 void init_metronome(struct Metronome *m) {
 	get_config(&m->config);
 	get_presets(&m->presets);
@@ -18,11 +23,6 @@ void init_metronome(struct Metronome *m) {
 
 	display_keybinds(&m->config);
 	display_player_state(m);
-}
-
-void apply_preset(struct Metronome *m) {
-	m->ps.bpm = m->presets.items[m->preset_index].bpm;
-	memcpy(m->ps.pattern, m->presets.items[m->preset_index].pattern, MAX_PATTERN_LEN);
 }
 
 void start_metronome(struct Metronome *m) {
