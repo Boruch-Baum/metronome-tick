@@ -17,7 +17,7 @@ void presets_equal(struct Presets *p1, struct Presets *p2) {
 void _test_default_presets(void) {
 	struct Presets expected = {
 		.items = malloc(sizeof(struct Preset)),
-		.size = 1,
+		.size = 0
 	};
 	expected.items[0] = (struct Preset){
 		.name = "Default",

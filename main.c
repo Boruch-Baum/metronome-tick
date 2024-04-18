@@ -14,9 +14,9 @@ int main(void) {
 			set_bpm(&m, m.ps.bpm+m.config.interval);
 		} else if (c == m.config.keys.down) {
 			set_bpm(&m, m.ps.bpm-m.config.interval);
-		} else if (c == m.config.keys.next) {
+		} else if (c == m.config.keys.next && m.presets.size > 0) {
 			set_preset(&m, (m.preset_index+1)%m.presets.size);
-		} else if (c == m.config.keys.prev) {
+		} else if (c == m.config.keys.prev && m.presets.size > 0) {
 			set_preset(&m, (m.preset_index+m.presets.size-1)% m.presets.size);
 		} else if (c == m.config.keys.toggle_play) {
 			if (m.ps.playing) {

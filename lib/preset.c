@@ -82,6 +82,5 @@ void get_presets(struct Presets *presets) {
 			.bpm = 120,
 			.pattern = ">...",
 		};
-		presets->size = 1;
 	}
 }
