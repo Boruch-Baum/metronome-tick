@@ -24,7 +24,7 @@ int main(void) {
 			} else {
 				start_metronome(&m);
 			}
-		} else if (c == m.config.keys.save) {
+		} else if (c == m.config.keys.add) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
 			char *pos = strrchr(preset_name, '\n');

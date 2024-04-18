@@ -4,7 +4,7 @@ struct Keys {
 	char next;
 	char prev;
 	char toggle_play;
-	char save;
+	char add;
 	char show_prompt;
 	char quit;
 };
