@@ -35,7 +35,7 @@ void process_presets_file(struct Presets *presets, FILE *file) {
 			struct Preset preset = { .bpm = 120, .pattern = "" };
 			memcpy(preset.name, line+1, pos-line-1);
 			add_preset(presets, &preset);
-		} else if (line[0] != '\n') {
+		} else if (line[0] != '\n' && line[0] != '#') {
 			char *pos = strchr(line, '=');
 			if (pos == NULL) {
 				strcpy(error, "expect key=value");
