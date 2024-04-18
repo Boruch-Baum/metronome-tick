@@ -50,7 +50,7 @@ int get_input(void) {
 	}
 }
 
-void get_command(char *line, char *prompt) {
+void get_command(char *line, int max_line_size, char *prompt) {
 	printf("\n%s", prompt);
 	fflush(stdout);
 	int c;
@@ -103,7 +103,7 @@ void get_command(char *line, char *prompt) {
 				}
 				fflush(stdout);
 			}
-		} else if (len < MAX_COMMAND_LEN - 1) {
+		} else if (len < max_line_size - 1) {
 			for (int j = len; j > i; j--) {
 				line[j] = line[j-1];
 			}
@@ -111,7 +111,7 @@ void get_command(char *line, char *prompt) {
 			i += 1;
 			len += 1;
 			line[len] = '\0';
-			line[MAX_COMMAND_LEN-1] = '\0';
+			line[max_line_size-1] = '\0';
 			printf("\033[K");
 			printf("%s", line+i-1);
 			if (len != i) {
