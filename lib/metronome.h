@@ -9,7 +9,6 @@ struct Metronome {
 	struct Config config;
 	struct Presets presets;
 	int preset_index;
-	char preset_name[MAX_PRESET_NAME_LEN];
 };
 
 void init_metronome(struct Metronome *m);

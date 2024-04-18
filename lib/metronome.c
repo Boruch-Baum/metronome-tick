@@ -1,8 +1,6 @@
 #include "metronome.h"
 #include <pthread.h>
 
-#define UNNAMED_PRESET "\033[3mUnnamed\033[1m"
-
 void init_metronome(struct Metronome *m) {
 	get_config(&m->config);
 	get_presets(&m->presets);
@@ -25,7 +23,6 @@ void init_metronome(struct Metronome *m) {
 void apply_preset(struct Metronome *m) {
 	m->ps.bpm = m->presets.items[m->preset_index].bpm;
 	memcpy(m->ps.pattern, m->presets.items[m->preset_index].pattern, MAX_PATTERN_LEN);
-	memcpy(m->preset_name, m->presets.items[m->preset_index].name, MAX_PRESET_NAME_LEN);
 }
 
 void start_metronome(struct Metronome *m) {
@@ -51,7 +48,6 @@ void stop_metronome(struct Metronome *m) {
 
 void set_bpm(struct Metronome *m, int bpm) {
 	m->ps.bpm = bpm;
-	strcpy(m->preset_name, UNNAMED_PRESET);
 	display_player_state(m);
 	if (m->ps.playing) {
 		start_metronome(m);
@@ -60,7 +56,6 @@ void set_bpm(struct Metronome *m, int bpm) {
 
 void set_pattern(struct Metronome *m, char *pattern) {
 	memcpy(m->ps.pattern, pattern, MAX_PATTERN_LEN);
-	strcpy(m->preset_name, UNNAMED_PRESET);
 	display_player_state(m);
 	if (m->ps.playing) {
 		start_metronome(m);
@@ -78,6 +73,6 @@ void set_preset(struct Metronome *m, int preset_index) {
 
 void display_player_state(struct Metronome *m) {
 	printf("\33[2K\r"); // https://stackoverflow.com/a/35190285/10254049
-	printf("\033[1m(%s)\033[0m %s @ %d", m->preset_name, m->ps.pattern, m->ps.bpm);
+	printf("\033[1m(%s)\033[0m %s @ %d", m->presets.items[m->preset_index], m->ps.pattern, m->ps.bpm);
 	fflush(stdout);
 }
