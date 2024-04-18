@@ -46,8 +46,6 @@ int main(void) {
 			if (strncmp(line, "bpm", pos-line) == 0) {
 				set_bpm(&m, atoi(pos+1));
 			} else if (strncmp(line, "pattern", pos-line) == 0) {
-				int len = strnlen(pos+1, MAX_PATTERN_LEN) - 1;
-				line[8 + len] = '\0';
 				set_pattern(&m, pos+1);
 			} else if (strncmp(line, "preset", pos-line) == 0) {
 				int found = 0;
