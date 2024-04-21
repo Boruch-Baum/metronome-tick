@@ -67,8 +67,8 @@ int main(void) {
 					}
 				}
 				if (!found) {
-					printf("Cannot find preset with name %s", pos+1);
-					fflush(stdout);
+					display_player_state(&m);
+					print_error("Cannot find preset with name %s", pos+1);
 				}
 			} else if (strncmp(line, "set", pos-line) == 0) {
 				char *sep = strchr(pos+1, '@');

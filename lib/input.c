@@ -1,5 +1,6 @@
 #include "input.h"
 #include "keys.h"
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -122,4 +123,14 @@ void get_command(char *line, int max_line_size, char *prompt) {
 	}
 	printf("\33[2K\033[A\33[2K");
 	// TODO handle SIGINT
+}
+
+void print_error(const char *restrict fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	printf("\n");
+	vprintf(fmt, ap);
+	va_end(ap);
+	fflush(stdout);
+	printf("\33[2K\033[A\33[2K"); // purposely not flushing until next flush
 }
