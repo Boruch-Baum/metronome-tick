@@ -57,7 +57,9 @@ int main(void) {
 			char line[MAX_COMMAND_LEN];
 			get_command(line, MAX_COMMAND_LEN, ":");
 			char *pos = strchr(line, ' ');
-			if (pos == NULL) {
+			if (line[0] == '\0') {
+				display_player_state(&m);
+			} else if (pos == NULL) {
 				print_error("Invalid command syntax");
 			} else if (strncmp(line, "bpm", pos-line) == 0) {
 				set_bpm(&m, atoi(pos+1));
