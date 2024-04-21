@@ -17,5 +17,6 @@ struct Presets {
 
 void get_presets(struct Presets*);
 void save_preset(struct Preset*, int, char*);
+void edit_preset_name(struct Preset*, char*);
 void add_preset(struct Presets*, char*, int, char*);
 void delete_preset(struct Presets*, int);

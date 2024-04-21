@@ -38,6 +38,8 @@ void process_config_file(struct Config *config, FILE *file) {
 			config->keys.toggle_play = str_to_key(pos);
 		} else if (strcmp(line, "save") == 0) {
 			config->keys.save = str_to_key(pos);
+		} else if (strcmp(line, "edit") == 0) {
+			config->keys.edit = str_to_key(pos);
 		} else if (strcmp(line, "add") == 0) {
 			config->keys.add = str_to_key(pos);
 		} else if (strcmp(line, "delete") == 0) {
@@ -71,6 +73,7 @@ void get_config(struct Config *config) {
 			.prev = 'h',
 			.toggle_play = ' ',
 			.save = 's',
+			.edit = 'e',
 			.add = 'a',
 			.delete = 'd',
 			.show_prompt = ':',
@@ -99,6 +102,7 @@ void display_keybinds(struct Config *c) {
 	char prev_key[MAX_KEY_STR_LEN];
 	char toggle_play_key[MAX_KEY_STR_LEN];
 	char save_key[MAX_KEY_STR_LEN];
+	char edit_key[MAX_KEY_STR_LEN];
 	char add_key[MAX_KEY_STR_LEN];
 	char delete_key[MAX_KEY_STR_LEN];
 	char show_prompt_key[MAX_KEY_STR_LEN];
@@ -110,6 +114,7 @@ void display_keybinds(struct Config *c) {
 	key_to_str(prev_key, c->keys.prev);
 	key_to_str(toggle_play_key, c->keys.toggle_play);
 	key_to_str(save_key, c->keys.save);
+	key_to_str(edit_key, c->keys.edit);
 	key_to_str(add_key, c->keys.add);
 	key_to_str(delete_key, c->keys.delete);
 	key_to_str(show_prompt_key, c->keys.show_prompt);
@@ -121,13 +126,14 @@ void display_keybinds(struct Config *c) {
 	boldify(prev_key);
 	boldify(toggle_play_key);
 	boldify(save_key);
+	boldify(edit_key);
 	boldify(add_key);
 	boldify(delete_key);
 	boldify(show_prompt_key);
 	boldify(quit_key);
 
 	printf("%s +BPM | %s -BPM | %s Next preset | %s Prev preset | %s Toggle play\n"
-			"%s Save | %s Add | %s Delete | %s Show prompt | %s Quit\n",
+			"%s Save | %s Edit | %s Add | %s Delete | %s Show prompt | %s Quit\n",
 			up_key, down_key, next_key, prev_key, toggle_play_key, save_key,
-			add_key, delete_key, show_prompt_key, quit_key);
+			edit_key, add_key, delete_key, show_prompt_key, quit_key);
 }
