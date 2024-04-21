@@ -25,17 +25,6 @@ FILE *read_xdg_file(char *xdg_dir, char *default_dir, char *subpath) {
 	return fopen(path, "r");
 }
 
-void append_xdg_file(char *xdg_dir, char *default_dir, char *subpath, char *data) {
-	char path[PATH_MAX];
-	get_xdg_path(path, xdg_dir, default_dir, subpath);
-	FILE *file = fopen(path, "a");
-	if (file == NULL) {
-		exit(EXIT_FAILURE);
-	}
-	fprintf(file, "%s", data);
-	fclose(file);
-}
-
 int mktemp_in_tmpdir(char *template) {
 	char temp_dir[PATH_MAX];
 	const char *TMPDIR = getenv("TMPDIR");

@@ -6,6 +6,8 @@
 
 #define INIT_PRESETS_CAPACITY 2
 
+static char presets_path[PATH_MAX];
+
 void add_preset(struct Presets *presets, struct Preset *preset) {
 	if (presets->size == presets->capacity) {
 		presets->capacity *= 2;
@@ -18,19 +20,18 @@ void add_preset(struct Presets *presets, struct Preset *preset) {
 void append_preset(struct Preset *preset) {
 	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
 	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", preset->name, preset->bpm, preset->pattern);
-	append_xdg_file("XDG_DATA_HOME", ".local/share", "tick/presets.ini", str);
+	FILE *file = fopen(presets_path, "a");
+	fputs(str, file);
+	fclose(file);
 }
 
 void save_preset(struct Preset *preset, int bpm, char *pattern) {
 	preset->bpm = bpm;
 	memcpy(preset->pattern, pattern, MAX_PATTERN_LEN);
 
-	char presets_path[PATH_MAX];
-	get_xdg_path(presets_path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
-	FILE *presets_file = fopen(presets_path, "r");
-
 	char tmp_path[PATH_MAX] = "tick-presets";
 	int fd = mktemp_in_tmpdir(tmp_path);
+	FILE *presets_file = fopen(presets_path, "r");
 
 	char line[MAX_LINE_LEN];
 	int found = 0;
@@ -69,12 +70,9 @@ void delete_preset(struct Presets *presets, int i) {
 	memmove(presets->items+i, presets->items+i+1, (presets->size-i-1)*sizeof(struct Preset));
 	presets->size -= 1;
 
-	char presets_path[PATH_MAX];
-	get_xdg_path(presets_path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
-	FILE *presets_file = fopen(presets_path, "r");
-
 	char tmp_path[PATH_MAX] = "tick-presets";
 	int fd = mktemp_in_tmpdir(tmp_path);
+	FILE *presets_file = fopen(presets_path, "r");
 
 	char line[MAX_LINE_LEN];
 	int found = 0;
@@ -157,7 +155,8 @@ void get_presets(struct Presets *presets) {
 		.size = 0,
 		.capacity = INIT_PRESETS_CAPACITY,
 	};
-	FILE *file = read_xdg_file("XDG_DATA_HOME", ".local/share", "tick/presets.ini");
+	get_xdg_path(presets_path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
+	FILE *file = fopen(presets_path, "r");
 	if (file != NULL) {
 		process_presets_file(presets, file);
 		fclose(file);
