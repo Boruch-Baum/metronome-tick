@@ -18,22 +18,19 @@ void add_to_presets(struct Presets *presets, struct Preset *preset) {
 }
 
 void add_preset(struct Presets *presets, char *name, int bpm, char *pattern) {
-	struct Preset preset = { .bpm = bpm };
-	memcpy(preset.name, name, MAX_PRESET_NAME_LEN);
-	memcpy(preset.pattern, pattern, MAX_PATTERN_LEN);
-	add_to_presets(presets, &preset);
-
 	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
 	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", name, bpm, pattern);
 	FILE *file = fopen(presets_path, "a");
 	fputs(str, file);
 	fclose(file);
+
+	struct Preset preset = { .bpm = bpm };
+	memcpy(preset.name, name, MAX_PRESET_NAME_LEN);
+	memcpy(preset.pattern, pattern, MAX_PATTERN_LEN);
+	add_to_presets(presets, &preset);
 }
 
 void save_preset(struct Preset *preset, int bpm, char *pattern) {
-	preset->bpm = bpm;
-	memcpy(preset->pattern, pattern, MAX_PATTERN_LEN);
-
 	char tmp_path[PATH_MAX] = "tick-presets";
 	int fd = mktemp_in_tmpdir(tmp_path);
 	FILE *presets_file = fopen(presets_path, "r");
@@ -67,14 +64,12 @@ void save_preset(struct Preset *preset, int bpm, char *pattern) {
 	fclose(presets_file);
 	close(fd);
 	rename_file(tmp_path, presets_path);
+
+	preset->bpm = bpm;
+	memcpy(preset->pattern, pattern, MAX_PATTERN_LEN);
 }
 
 void delete_preset(struct Presets *presets, int i) {
-	char preset_name[MAX_PRESET_NAME_LEN];
-	strcpy(preset_name, presets->items[i].name);
-	memmove(presets->items+i, presets->items+i+1, (presets->size-i-1)*sizeof(struct Preset));
-	presets->size -= 1;
-
 	char tmp_path[PATH_MAX] = "tick-presets";
 	int fd = mktemp_in_tmpdir(tmp_path);
 	FILE *presets_file = fopen(presets_path, "r");
@@ -88,7 +83,7 @@ void delete_preset(struct Presets *presets, int i) {
 			pos = strrchr(line, ']');
 			if (pos != NULL) {
 				*pos = '\0';
-				if (strcmp(preset_name, line+1) == 0) {
+				if (strcmp(presets->items[i].name, line+1) == 0) {
 					found = 1;
 					in_section = 1;
 					continue;
@@ -106,6 +101,9 @@ void delete_preset(struct Presets *presets, int i) {
 	fclose(presets_file);
 	close(fd);
 	rename_file(tmp_path, presets_path);
+
+	memmove(presets->items+i, presets->items+i+1, (presets->size-i-1)*sizeof(struct Preset));
+	presets->size -= 1;
 }
 
 void process_presets_file(struct Presets *presets, FILE *file) {
