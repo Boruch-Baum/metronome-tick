@@ -73,6 +73,12 @@ void set_preset(struct Metronome *m, int preset_index) {
 
 void display_player_state(struct Metronome *m) {
 	printf("\33[2K\r"); // https://stackoverflow.com/a/35190285/10254049
-	printf("\033[1m(%s)\033[0m %s @ %d", m->presets.items[m->preset_index], m->ps.pattern, m->ps.bpm);
+	char *unsaved_prefix = "";
+	if (m->presets.size == 0 ||
+			m->ps.bpm != m->presets.items[m->preset_index].bpm ||
+			strcmp(m->ps.pattern, m->presets.items[m->preset_index].pattern) != 0) {
+		unsaved_prefix = "*\033[3m";
+	}
+	printf("%s\033[1m(%s)\033[0m %s @ %d", unsaved_prefix, m->presets.items[m->preset_index].name, m->ps.pattern, m->ps.bpm);
 	fflush(stdout);
 }

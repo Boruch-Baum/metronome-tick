@@ -1,6 +1,8 @@
 #include "preset.h"
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define INIT_PRESETS_CAPACITY 2
 
@@ -17,6 +19,48 @@ void append_preset(struct Preset *preset) {
 	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
 	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", preset->name, preset->bpm, preset->pattern);
 	append_xdg_file("XDG_DATA_HOME", ".local/share", "tick/presets.ini", str);
+}
+
+void save_preset(struct Preset *preset, int bpm, char *pattern) {
+	preset->bpm = bpm;
+	memcpy(preset->pattern, pattern, MAX_PATTERN_LEN);
+
+	char presets_path[PATH_MAX];
+	get_xdg_path(presets_path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
+	FILE *presets_file = fopen(presets_path, "r");
+
+	char tmp_path[PATH_MAX] = "tick-presets";
+	int fd = mktemp_in_tmpdir(tmp_path);
+
+	char line[MAX_LINE_LEN];
+	int found = 0;
+	int in_section = 0;
+	char *pos;
+	while (fgets(line, MAX_LINE_LEN, presets_file) != NULL) {
+		if (!in_section) {
+			write(fd, line, strlen(line));
+		} else if (line[0] == '[') {
+			dprintf(fd, "bpm=%d\npattern=%s\n\n", bpm, pattern);
+			write(fd, line, strlen(line));
+			in_section = 0;
+		}
+		if (!found) {
+			pos = strrchr(line, ']');
+			if (pos != NULL) {
+				*pos = '\0';
+				if (strcmp(preset->name, line+1) == 0) {
+					found = 1;
+					in_section = 1;
+				}
+			}
+		}
+	}
+	if (in_section) {
+		dprintf(fd, "bpm=%d\npattern=%s\n", bpm, pattern);
+	}
+	fclose(presets_file);
+	close(fd);
+	rename_file(tmp_path, presets_path);
 }
 
 void process_presets_file(struct Presets *presets, FILE *file) {
