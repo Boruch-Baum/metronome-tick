@@ -8,7 +8,7 @@
 
 static char presets_path[PATH_MAX];
 
-void add_preset(struct Presets *presets, struct Preset *preset) {
+void add_to_presets(struct Presets *presets, struct Preset *preset) {
 	if (presets->size == presets->capacity) {
 		presets->capacity *= 2;
 		presets->items = realloc(presets->items, sizeof(struct Preset) * presets->capacity);
@@ -17,9 +17,14 @@ void add_preset(struct Presets *presets, struct Preset *preset) {
 	presets->size += 1;
 }
 
-void append_preset(struct Preset *preset) {
+void add_preset(struct Presets *presets, char *name, int bpm, char *pattern) {
+	struct Preset preset = { .bpm = bpm };
+	memcpy(preset.name, name, MAX_PRESET_NAME_LEN);
+	memcpy(preset.pattern, pattern, MAX_PATTERN_LEN);
+	add_to_presets(presets, &preset);
+
 	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
-	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", preset->name, preset->bpm, preset->pattern);
+	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", name, bpm, pattern);
 	FILE *file = fopen(presets_path, "a");
 	fputs(str, file);
 	fclose(file);
@@ -118,7 +123,7 @@ void process_presets_file(struct Presets *presets, FILE *file) {
 			}
 			struct Preset preset = { .bpm = 120, .pattern = "" };
 			memcpy(preset.name, line+1, pos-line-1);
-			add_preset(presets, &preset);
+			add_to_presets(presets, &preset);
 		} else if (line[0] != '\n' && line[0] != '#') {
 			char *pos = strchr(line, '=');
 			if (pos == NULL) {
