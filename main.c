@@ -25,6 +25,9 @@ int main(void) {
 		} else if (c ==  m.config.keys.save && m.presets.size > 0) {
 			edit_preset_settings(m.presets.items+m.preset_index, m.ps.bpm, m.ps.pattern);
 			display_player_state(&m);
+		} else if (c == m.config.keys.save) {
+			add_preset(&m.presets, m.presets.items[0].name, m.ps.bpm, m.ps.pattern);
+			set_preset(&m, 0);
 		} else if (c == m.config.keys.edit && m.presets.size > 0) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
