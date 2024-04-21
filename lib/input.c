@@ -122,7 +122,6 @@ void get_command(char *line, int max_line_size, char *prompt) {
 		}
 	}
 	printf("\33[2K\033[A\33[2K");
-	// TODO handle SIGINT
 }
 
 void print_error(const char *restrict fmt, ...) {
