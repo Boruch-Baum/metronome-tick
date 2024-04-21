@@ -83,11 +83,8 @@ void get_config(struct Config *config) {
 
 void boldify(char *str) {
 	int len = strlen(str);
-	char tmp[len+1];
-	memcpy(tmp, str, len);
-	tmp[len] = '\0';
+	memmove(str+4, str, len);
 	memcpy(str, "\033[1m", 4);
-	memcpy(str+4, tmp, len);
 	memcpy(str+len+4, "\033[0m", 4);
 	str[len+8] = '\0';
 }
