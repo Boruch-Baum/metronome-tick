@@ -80,6 +80,8 @@ int main(void) {
 					set_pattern(&m, pos+1);
 					set_bpm(&m, atoi(sep+1));
 				}
+			} else {
+				display_player_state(&m);
 			}
 		} else if (c == m.config.keys.quit) {
 			stop_metronome(&m);
