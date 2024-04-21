@@ -15,7 +15,7 @@ BUILD_OBJS := $(LIB_SRCS:%.c=$(DEBUG_DIR)/%.o) $(DEBUG_DIR)/main.o
 TEST_OBJS := $(LIB_SRCS:%.c=$(DEBUG_DIR)/%.o) $(TEST_SRCS:%.c=$(DEBUG_DIR)/%.o)
 RELEASE_OBJS := $(LIB_SRCS:%.c=$(RELEASE_DIR)/%.o) $(RELEASE_DIR)/main.o
 
-.PHONY: build test release clean
+.PHONY: build test release run clean
 
 build: $(BUILD_OBJS)
 	$(CC) $(DEBUG_CFLAGS) -o $(DEBUG_DIR)/$(TARGET_NAME) $^ $(LDFLAGS)
