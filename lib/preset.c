@@ -17,17 +17,34 @@ void add_to_presets(struct Presets *presets, struct Preset *preset) {
 	presets->size += 1;
 }
 
-void add_preset(struct Presets *presets, char *name, int bpm, char *pattern) {
-	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
-	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", name, bpm, pattern);
-	FILE *file = fopen(presets_path, "a");
-	fputs(str, file);
-	fclose(file);
+void edit_preset_name(struct Preset *preset, char *name) {
+	char tmp_path[PATH_MAX] = "tick-presets";
+	int fd = mktemp_in_tmpdir(tmp_path);
+	FILE *presets_file = fopen(presets_path, "r");
 
-	struct Preset preset = { .bpm = bpm };
-	memcpy(preset.name, name, MAX_PRESET_NAME_LEN);
-	memcpy(preset.pattern, pattern, MAX_PATTERN_LEN);
-	add_to_presets(presets, &preset);
+	char line[MAX_LINE_LEN];
+	int found = 0;
+	char *pos;
+	while (fgets(line, MAX_LINE_LEN, presets_file) != NULL) {
+		if (!found) {
+			pos = strrchr(line, ']');
+			if (pos != NULL) {
+				*pos = '\0';
+				if (strcmp(preset->name, line+1) == 0) {
+					dprintf(fd, "[%s]\n", name);
+					found = 1;
+					continue;
+				}
+				*pos = ']';
+			}
+		}
+		write(fd, line, strlen(line));
+	}
+	fclose(presets_file);
+	close(fd);
+	rename_file(tmp_path, presets_path);
+
+	memcpy(preset->name, name, MAX_PRESET_NAME_LEN);
 }
 
 void edit_preset_settings(struct Preset *preset, int bpm, char *pattern) {
@@ -69,34 +86,17 @@ void edit_preset_settings(struct Preset *preset, int bpm, char *pattern) {
 	memcpy(preset->pattern, pattern, MAX_PATTERN_LEN);
 }
 
-void edit_preset_name(struct Preset *preset, char *name) {
-	char tmp_path[PATH_MAX] = "tick-presets";
-	int fd = mktemp_in_tmpdir(tmp_path);
-	FILE *presets_file = fopen(presets_path, "r");
+void add_preset(struct Presets *presets, char *name, int bpm, char *pattern) {
+	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
+	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", name, bpm, pattern);
+	FILE *file = fopen(presets_path, "a");
+	fputs(str, file);
+	fclose(file);
 
-	char line[MAX_LINE_LEN];
-	int found = 0;
-	char *pos;
-	while (fgets(line, MAX_LINE_LEN, presets_file) != NULL) {
-		if (!found) {
-			pos = strrchr(line, ']');
-			if (pos != NULL) {
-				*pos = '\0';
-				if (strcmp(preset->name, line+1) == 0) {
-					dprintf(fd, "[%s]\n", name);
-					found = 1;
-					continue;
-				}
-				*pos = ']';
-			}
-		}
-		write(fd, line, strlen(line));
-	}
-	fclose(presets_file);
-	close(fd);
-	rename_file(tmp_path, presets_path);
-
-	memcpy(preset->name, name, MAX_PRESET_NAME_LEN);
+	struct Preset preset = { .bpm = bpm };
+	memcpy(preset.name, name, MAX_PRESET_NAME_LEN);
+	memcpy(preset.pattern, pattern, MAX_PATTERN_LEN);
+	add_to_presets(presets, &preset);
 }
 
 void delete_preset(struct Presets *presets, int i) {
