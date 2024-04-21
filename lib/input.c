@@ -84,7 +84,7 @@ void get_command(char *line, int max_line_size, char *prompt) {
 				line[len] = '\0';
 				printf("\033[1D");
 				printf("\033[K");
-				printf("%s", line+i);
+				fputs(line+i, stdout);
 				if (len != i) { // "\033[0D" moves the cursor 1 to the right instead of 0
 					printf("\033[%dD", len-i);
 				}
@@ -98,7 +98,7 @@ void get_command(char *line, int max_line_size, char *prompt) {
 				len -= 1;
 				line[len] = '\0';
 				printf("\033[K");
-				printf("%s", line+i);
+				fputs(line+i, stdout);
 				if (len != i) {
 					printf("\033[%dD", len-i);
 				}
@@ -114,7 +114,7 @@ void get_command(char *line, int max_line_size, char *prompt) {
 			line[len] = '\0';
 			line[max_line_size-1] = '\0';
 			printf("\033[K");
-			printf("%s", line+i-1);
+			fputs(line+i-1, stdout);
 			if (len != i) {
 				printf("\033[%dD", len-i);
 			}

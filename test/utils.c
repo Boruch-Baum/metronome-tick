@@ -7,7 +7,7 @@
 void write_file(char *path, char *str) {
 	FILE *file = fopen(path, "w");
 	assert(file != NULL);
-	fprintf(file, "%s", str);
+	fputs(str, file);
 	fclose(file);
 }
 
