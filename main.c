@@ -35,7 +35,7 @@ int main(void) {
 				edit_preset_name(&m.presets.items[m.preset_index], preset_name);
 			}
 			display_player_state(&m);
-		} else if (c == m.config.keys.add) {
+		} else if (c == m.config.keys.edit || c == m.config.keys.add) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
 			if (preset_name[0] != '\0') {
