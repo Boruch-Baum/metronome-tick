@@ -23,7 +23,7 @@ int main(void) {
 		} else if (c == m.config.keys.toggle_play) {
 			start_metronome(&m);
 		} else if (c ==  m.config.keys.save && m.presets.size > 0) {
-			save_preset(m.presets.items+m.preset_index, m.ps.bpm, m.ps.pattern);
+			edit_preset_settings(m.presets.items+m.preset_index, m.ps.bpm, m.ps.pattern);
 			display_player_state(&m);
 		} else if (c == m.config.keys.edit && m.presets.size > 0) {
 			char preset_name[MAX_PRESET_NAME_LEN];

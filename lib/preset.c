@@ -30,7 +30,7 @@ void add_preset(struct Presets *presets, char *name, int bpm, char *pattern) {
 	add_to_presets(presets, &preset);
 }
 
-void save_preset(struct Preset *preset, int bpm, char *pattern) {
+void edit_preset_settings(struct Preset *preset, int bpm, char *pattern) {
 	char tmp_path[PATH_MAX] = "tick-presets";
 	int fd = mktemp_in_tmpdir(tmp_path);
 	FILE *presets_file = fopen(presets_path, "r");
