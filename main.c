@@ -80,10 +80,6 @@ int main(void) {
 					set_pattern(&m, pos+1);
 					set_bpm(&m, atoi(sep+1));
 				}
-			} else if (strncmp(line, "quit", pos-line) == 0) {
-				stop_metronome(&m);
-				printf("\n");
-				break;
 			}
 		} else if (c == m.config.keys.quit) {
 			stop_metronome(&m);
