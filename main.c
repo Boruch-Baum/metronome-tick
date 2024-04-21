@@ -38,6 +38,15 @@ int main(void) {
 			} else {
 				display_player_state(&m);
 			}
+		} else if (c == m.config.keys.delete && m.presets.size > 0) {
+			char yn[2];
+			get_command(yn, 2, "Delete this preset? (y/N) ");
+			if (yn[0] == 'y') {
+				delete_preset(&m.presets, m.preset_index);
+				set_preset(&m, m.preset_index%m.presets.size);
+			} else {
+				display_player_state(&m);
+			}
 		} else if (c == m.config.keys.show_prompt) {
 			char line[MAX_COMMAND_LEN];
 			get_command(line, MAX_COMMAND_LEN, ":");

@@ -63,6 +63,48 @@ void save_preset(struct Preset *preset, int bpm, char *pattern) {
 	rename_file(tmp_path, presets_path);
 }
 
+void delete_preset(struct Presets *presets, int i) {
+	char preset_name[MAX_PRESET_NAME_LEN];
+	strcpy(preset_name, presets->items[i].name);
+	memmove(presets->items+i, presets->items+i+1, (presets->size-i-1)*sizeof(struct Preset));
+	presets->size -= 1;
+
+	char presets_path[PATH_MAX];
+	get_xdg_path(presets_path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
+	FILE *presets_file = fopen(presets_path, "r");
+
+	char tmp_path[PATH_MAX] = "tick-presets";
+	int fd = mktemp_in_tmpdir(tmp_path);
+
+	char line[MAX_LINE_LEN];
+	int found = 0;
+	int in_section = 0;
+	char *pos;
+	while (fgets(line, MAX_LINE_LEN, presets_file) != NULL) {
+		if (!found) {
+			pos = strrchr(line, ']');
+			if (pos != NULL) {
+				*pos = '\0';
+				if (strcmp(preset_name, line+1) == 0) {
+					found = 1;
+					in_section = 1;
+					continue;
+				}
+				*pos = ']';
+			}
+		}
+		if (!in_section) {
+			write(fd, line, strlen(line));
+		} else if (line[0] == '[') {
+			write(fd, line, strlen(line));
+			in_section = 0;
+		}
+	}
+	fclose(presets_file);
+	close(fd);
+	rename_file(tmp_path, presets_path);
+}
+
 void process_presets_file(struct Presets *presets, FILE *file) {
 	char line[MAX_LINE_LEN];
 	char error[MAX_LINE_LEN+18]; // 19 from "unrecognized key ''" - 1 from "="
