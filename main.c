@@ -28,12 +28,16 @@ int main(void) {
 		} else if (c == m.config.keys.add) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
-			struct Preset preset = { .bpm = m.ps.bpm };
-			memcpy(preset.name, preset_name, MAX_PRESET_NAME_LEN);
-			memcpy(preset.pattern, m.ps.pattern, MAX_PATTERN_LEN);
-			add_preset(&m.presets, &preset);
-			append_preset(&preset);
-			set_preset(&m, m.presets.size - 1);
+			if (preset_name[0] != '\0') {
+				struct Preset preset = { .bpm = m.ps.bpm };
+				memcpy(preset.name, preset_name, MAX_PRESET_NAME_LEN);
+				memcpy(preset.pattern, m.ps.pattern, MAX_PATTERN_LEN);
+				add_preset(&m.presets, &preset);
+				append_preset(&preset);
+				set_preset(&m, m.presets.size - 1);
+			} else {
+				display_player_state(&m);
+			}
 		} else if (c == m.config.keys.show_prompt) {
 			char line[MAX_COMMAND_LEN];
 			get_command(line, MAX_COMMAND_LEN, ":");
