@@ -16,7 +16,7 @@ void configs_equal(struct Config *c1, struct Config *c2) {
 	mu_assert_int_eq(c1->keys.toggle_play, c2->keys.toggle_play);
 	mu_assert_int_eq(c1->keys.save, c2->keys.save);
 	mu_assert_int_eq(c1->keys.edit, c2->keys.edit);
-	mu_assert_int_eq(c1->keys.add, c2->keys.add);
+	mu_assert_int_eq(c1->keys.create, c2->keys.create);
 	mu_assert_int_eq(c1->keys.delete, c2->keys.delete);
 	mu_assert_int_eq(c1->keys.show_prompt, c2->keys.show_prompt);
 	mu_assert_int_eq(c1->keys.quit, c2->keys.quit);
@@ -35,7 +35,7 @@ void _test_default_config(void) {
 			.toggle_play = ' ',
 			.save = 's',
 			.edit = 'e',
-			.add = 'a',
+			.create = 'c',
 			.delete = 'd',
 			.show_prompt = ':',
 			.quit = 'q',
@@ -105,7 +105,7 @@ MU_TEST(test_full_config) {
 			.toggle_play = 'e',
 			.save = 'f',
 			.edit = 'g',
-			.add = 'h',
+			.create = 'h',
 			.delete = 'i',
 			.show_prompt = ';',
 			.quit = 'w',

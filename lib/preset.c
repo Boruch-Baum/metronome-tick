@@ -86,7 +86,7 @@ void edit_preset_settings(struct Preset *preset, int bpm, char *rhythm) {
 	memcpy(preset->rhythm, rhythm, MAX_RHYTHM_LEN);
 }
 
-void add_preset(struct Presets *presets, char *name, int bpm, char *rhythm) {
+void create_preset(struct Presets *presets, char *name, int bpm, char *rhythm) {
 	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
 	sprintf(str, "\n[%s]\nbpm=%d\nrhythm=%s\n", name, bpm, rhythm);
 	FILE *file = fopen(presets_path, "a");

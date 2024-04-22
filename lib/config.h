@@ -6,7 +6,7 @@ struct Keys {
 	char toggle_play;
 	char save;
 	char edit;
-	char add;
+	char create;
 	char delete;
 	char show_prompt;
 	char quit;
