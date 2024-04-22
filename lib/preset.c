@@ -17,7 +17,7 @@ void add_to_presets(struct Presets *presets, struct Preset *preset) {
 	presets->size += 1;
 }
 
-void edit_preset_name(struct Preset *preset, char *name) {
+void rename_preset(struct Preset *preset, char *name) {
 	char tmp_path[PATH_MAX] = "tick-presets";
 	int fd = mktemp_in_tmpdir(tmp_path);
 	FILE *presets_file = fopen(presets_path, "r");

@@ -28,14 +28,14 @@ int main(void) {
 		} else if (c == m.config.keys.save) {
 			create_preset(&m.presets, m.presets.items[0].name, m.ps.bpm, m.ps.rhythm);
 			set_preset(&m, 0);
-		} else if (c == m.config.keys.edit && m.presets.size > 0) {
+		} else if (c == m.config.keys.rename && m.presets.size > 0) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
 			if (preset_name[0] != '\0') {
-				edit_preset_name(&m.presets.items[m.preset_index], preset_name);
+				rename_preset(&m.presets.items[m.preset_index], preset_name);
 			}
 			display_player_state(&m);
-		} else if (c == m.config.keys.edit || c == m.config.keys.create) {
+		} else if (c == m.config.keys.rename || c == m.config.keys.create) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
 			if (preset_name[0] != '\0') {
