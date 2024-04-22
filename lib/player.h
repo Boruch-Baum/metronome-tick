@@ -3,7 +3,7 @@
 struct PlayerState {
 	int playing;
 	int bpm;
-	char pattern[32];
+	char rhythm[32];
 	int freq_accented;
 	int freq_general;
 };

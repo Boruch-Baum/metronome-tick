@@ -3,7 +3,7 @@
 
 void apply_preset(struct Metronome *m) {
 	m->ps.bpm = m->presets.items[m->preset_index].bpm;
-	memcpy(m->ps.pattern, m->presets.items[m->preset_index].pattern, MAX_PATTERN_LEN);
+	memcpy(m->ps.rhythm, m->presets.items[m->preset_index].rhythm, MAX_RHYTHM_LEN);
 }
 
 void init_metronome(struct Metronome *m) {
@@ -54,8 +54,8 @@ void set_bpm(struct Metronome *m, int bpm) {
 	}
 }
 
-void set_pattern(struct Metronome *m, char *pattern) {
-	memcpy(m->ps.pattern, pattern, MAX_PATTERN_LEN);
+void set_rhythm(struct Metronome *m, char *rhythm) {
+	memcpy(m->ps.rhythm, rhythm, MAX_RHYTHM_LEN);
 	display_player_state(m);
 	if (m->ps.playing) {
 		start_metronome(m);
@@ -76,9 +76,9 @@ void display_player_state(struct Metronome *m) {
 	char *unsaved_prefix = "";
 	if (m->presets.size == 0 ||
 			m->ps.bpm != m->presets.items[m->preset_index].bpm ||
-			strcmp(m->ps.pattern, m->presets.items[m->preset_index].pattern) != 0) {
+			strcmp(m->ps.rhythm, m->presets.items[m->preset_index].rhythm) != 0) {
 		unsaved_prefix = "*\033[3m";
 	}
-	printf("%s\033[1m(%s)\033[0m %s @ %d", unsaved_prefix, m->presets.items[m->preset_index].name, m->ps.pattern, m->ps.bpm);
+	printf("%s\033[1m(%s)\033[0m %s @ %d", unsaved_prefix, m->presets.items[m->preset_index].name, m->ps.rhythm, m->ps.bpm);
 	fflush(stdout);
 }

@@ -47,7 +47,7 @@ void edit_preset_name(struct Preset *preset, char *name) {
 	memcpy(preset->name, name, MAX_PRESET_NAME_LEN);
 }
 
-void edit_preset_settings(struct Preset *preset, int bpm, char *pattern) {
+void edit_preset_settings(struct Preset *preset, int bpm, char *rhythm) {
 	char tmp_path[PATH_MAX] = "tick-presets";
 	int fd = mktemp_in_tmpdir(tmp_path);
 	FILE *presets_file = fopen(presets_path, "r");
@@ -60,7 +60,7 @@ void edit_preset_settings(struct Preset *preset, int bpm, char *pattern) {
 		if (!in_section) {
 			write(fd, line, strlen(line));
 		} else if (line[0] == '[') {
-			dprintf(fd, "bpm=%d\npattern=%s\n\n", bpm, pattern);
+			dprintf(fd, "bpm=%d\nrhythm=%s\n\n", bpm, rhythm);
 			write(fd, line, strlen(line));
 			in_section = 0;
 		}
@@ -76,26 +76,26 @@ void edit_preset_settings(struct Preset *preset, int bpm, char *pattern) {
 		}
 	}
 	if (in_section) {
-		dprintf(fd, "bpm=%d\npattern=%s\n", bpm, pattern);
+		dprintf(fd, "bpm=%d\nrhythm=%s\n", bpm, rhythm);
 	}
 	fclose(presets_file);
 	close(fd);
 	rename_file(tmp_path, presets_path);
 
 	preset->bpm = bpm;
-	memcpy(preset->pattern, pattern, MAX_PATTERN_LEN);
+	memcpy(preset->rhythm, rhythm, MAX_RHYTHM_LEN);
 }
 
-void add_preset(struct Presets *presets, char *name, int bpm, char *pattern) {
+void add_preset(struct Presets *presets, char *name, int bpm, char *rhythm) {
 	char str[MAX_LINE_LEN * 3 + 2]; // 2 from 2 '\n'
-	sprintf(str, "\n[%s]\nbpm=%d\npattern=%s\n", name, bpm, pattern);
+	sprintf(str, "\n[%s]\nbpm=%d\nrhythm=%s\n", name, bpm, rhythm);
 	FILE *file = fopen(presets_path, "a");
 	fputs(str, file);
 	fclose(file);
 
 	struct Preset preset = { .bpm = bpm };
 	memcpy(preset.name, name, MAX_PRESET_NAME_LEN);
-	memcpy(preset.pattern, pattern, MAX_PATTERN_LEN);
+	memcpy(preset.rhythm, rhythm, MAX_RHYTHM_LEN);
 	add_to_presets(presets, &preset);
 }
 
@@ -149,7 +149,7 @@ void process_presets_file(struct Presets *presets, FILE *file) {
 				strcpy(error, "preset name must be non-empty");
 				goto invalid_config_exit;
 			}
-			struct Preset preset = { .bpm = 120, .pattern = "" };
+			struct Preset preset = { .bpm = 120, .rhythm = "" };
 			memcpy(preset.name, line+1, pos-line-1);
 			add_to_presets(presets, &preset);
 		} else if (line[0] != '\n' && line[0] != '#') {
@@ -162,11 +162,11 @@ void process_presets_file(struct Presets *presets, FILE *file) {
 			pos += 1;
 			if (strcmp(line, "bpm") == 0) {
 				presets->items[presets->size-1].bpm = atoi(pos);
-			} else if (strcmp(line, "pattern") == 0) {
+			} else if (strcmp(line, "rhythm") == 0) {
 				// strnlen - 1 to remove \n if < max len, and leave room for \0 if > max len
-				int len = strnlen(pos, MAX_PATTERN_LEN) - 1;
-				memcpy(presets->items[presets->size-1].pattern, pos, len);
-				presets->items[presets->size-1].pattern[len] = '\0';
+				int len = strnlen(pos, MAX_RHYTHM_LEN) - 1;
+				memcpy(presets->items[presets->size-1].rhythm, pos, len);
+				presets->items[presets->size-1].rhythm[len] = '\0';
 			} else {
 				sprintf(error, "unrecognized key '%s'", line);
 				goto invalid_config_exit;
@@ -198,7 +198,7 @@ void get_presets(struct Presets *presets) {
 		presets->items[0] = (struct Preset){
 			.name = "Default",
 			.bpm = 120,
-			.pattern = ">...",
+			.rhythm = ">...",
 		};
 	}
 }

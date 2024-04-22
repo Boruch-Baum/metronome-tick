@@ -10,7 +10,7 @@ void presets_equal(struct Presets *p1, struct Presets *p2) {
 	for (int i = 0; i < p1->size; i++) {
 		mu_assert_string_eq(p1->items[i].name, p2->items[i].name);
 		mu_assert_int_eq(p1->items[i].bpm, p2->items[i].bpm);
-		mu_assert_string_eq(p1->items[i].pattern, p2->items[i].pattern);
+		mu_assert_string_eq(p1->items[i].rhythm, p2->items[i].rhythm);
 	}
 }
 
@@ -22,7 +22,7 @@ void _test_default_presets(void) {
 	expected.items[0] = (struct Preset){
 		.name = "Default",
 		.bpm = 120,
-		.pattern = ">...",
+		.rhythm = ">...",
 	};
 	struct Presets result;
 	get_presets(&result);
@@ -64,7 +64,7 @@ MU_TEST(test_xdg_data_home) {
 }
 
 MU_TEST(test_no_xdg_data_home) {
-	write_file("/fakehome/.local/share/tick/presets.ini", "[b]\nbpm=1\npattern=.\n");
+	write_file("/fakehome/.local/share/tick/presets.ini", "[b]\nbpm=1\nrhythm=.\n");
 	setenv("HOME", "/fakehome", 1);
 	unsetenv("XDG_DATA_HOME");
 	struct Presets presets;
@@ -89,32 +89,32 @@ MU_TEST(test_full_presets) {
 	expected.items[0] = (struct Preset){
 		.name = "Ballade No. 1 in G minor, Op. 23 (Chopin) \"quote\"]",
 		.bpm = 120,
-		.pattern = ">.....",
+		.rhythm = ">.....",
 	};
 	expected.items[1] = (struct Preset){
 		.name = "Jazz swing",
 		.bpm = 360,
-		.pattern = ">'.",
+		.rhythm = ">'.",
 	};
 	expected.items[2] = (struct Preset){
 		.name = "Jazz 147",
 		.bpm = 360,
-		.pattern = ">..>..>.",
+		.rhythm = ">..>..>.",
 	};
 	expected.items[3] = (struct Preset){
 		.name = "Latin",
 		.bpm = 320,
-		.pattern = ">.>.>>.>.>..>.>.",
+		.rhythm = ">.>.>>.>.>..>.>.",
 	};
 	expected.items[4] = (struct Preset) {
 		.name = "Too long",
 		.bpm = 120,
-		.pattern = ">..>..>..>..>..>..>..>..>..>..>",
+		.rhythm = ">..>..>..>..>..>..>..>..>..>..>",
 	};
 	expected.items[5] = (struct Preset) {
 		.name = "Just short enough",
 		.bpm = 120,
-		.pattern = ">..>..>..>..>..>..>..>..>..>..>",
+		.rhythm = ">..>..>..>..>..>..>..>..>..>..>",
 	};
 	struct Presets result;
 	get_presets(&result);

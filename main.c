@@ -23,10 +23,10 @@ int main(void) {
 		} else if (c == m.config.keys.toggle_play) {
 			start_metronome(&m);
 		} else if (c ==  m.config.keys.save && m.presets.size > 0) {
-			edit_preset_settings(m.presets.items+m.preset_index, m.ps.bpm, m.ps.pattern);
+			edit_preset_settings(m.presets.items+m.preset_index, m.ps.bpm, m.ps.rhythm);
 			display_player_state(&m);
 		} else if (c == m.config.keys.save) {
-			add_preset(&m.presets, m.presets.items[0].name, m.ps.bpm, m.ps.pattern);
+			add_preset(&m.presets, m.presets.items[0].name, m.ps.bpm, m.ps.rhythm);
 			set_preset(&m, 0);
 		} else if (c == m.config.keys.edit && m.presets.size > 0) {
 			char preset_name[MAX_PRESET_NAME_LEN];
@@ -39,7 +39,7 @@ int main(void) {
 			char preset_name[MAX_PRESET_NAME_LEN];
 			get_command(preset_name, MAX_PRESET_NAME_LEN, "Preset name: ");
 			if (preset_name[0] != '\0') {
-				add_preset(&m.presets, preset_name, m.ps.bpm, m.ps.pattern);
+				add_preset(&m.presets, preset_name, m.ps.bpm, m.ps.rhythm);
 				set_preset(&m, m.presets.size-1);
 			} else {
 				display_player_state(&m);
@@ -63,8 +63,8 @@ int main(void) {
 				print_error("Invalid command syntax");
 			} else if (strncmp(line, "bpm", pos-line) == 0) {
 				set_bpm(&m, atoi(pos+1));
-			} else if (strncmp(line, "pattern", pos-line) == 0) {
-				set_pattern(&m, pos+1);
+			} else if (strncmp(line, "rhythm", pos-line) == 0) {
+				set_rhythm(&m, pos+1);
 			} else if (strncmp(line, "preset", pos-line) == 0) {
 				int found = 0;
 				for (int i = 0; i < m.presets.size; i++) {
@@ -79,11 +79,11 @@ int main(void) {
 				}
 			} else if (strncmp(line, "set", pos-line) == 0) {
 				char *sep = strchr(pos+1, '@');
-				if (sep-pos > MAX_PATTERN_LEN) { // sep - (pos + 1) > MAX_PATTERN_LEN - 1
-					print_error("Pattern cannot be longer than %d characters", MAX_PATTERN_LEN-1);
+				if (sep-pos > MAX_RHYTHM_LEN) { // sep - (pos + 1) > MAX_RHYTHM_LEN - 1
+					print_error("Rhythm cannot be longer than %d characters", MAX_RHYTHM_LEN-1);
 				} else {
 					*sep = '\0';
-					set_pattern(&m, pos+1);
+					set_rhythm(&m, pos+1);
 					set_bpm(&m, atoi(sep+1));
 				}
 			} else {
