@@ -3,7 +3,9 @@ A preset-oriented TUI metronome.
 
 ## Installation
 To build from source, tick requires
-the [`alsa-lib`](https://www.alsa-project.org/wiki/Download) library.
+the [`alsa-lib`](https://www.alsa-project.org/wiki/Download) library,
+[`clang`](https://releases.llvm.org/download.html) compiler,
+and [`scdoc`](https://sr.ht/~sircmpwn/scdoc/) for generating man pages.
 ```
 make release
 doas make PREFIX=/usr install
