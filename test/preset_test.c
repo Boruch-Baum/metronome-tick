@@ -14,31 +14,6 @@ void presets_equal(struct Presets *p1, struct Presets *p2) {
 	}
 }
 
-void _test_default_presets(void) {
-	struct Presets expected = {
-		.items = malloc(sizeof(struct Preset)),
-		.size = 0
-	};
-	expected.items[0] = (struct Preset){
-		.name = "Default",
-		.bpm = 120,
-		.rhythm = ">...",
-	};
-	struct Presets result;
-	get_presets(&result);
-	presets_equal(&expected, &result);
-	free(expected.items);
-	free(result.items);
-}
-
-MU_TEST(test_default_presets) {
-	_test_default_presets();
-}
-
-MU_TEST_SUITE(default_presets_test_suite) {
-	MU_RUN_TEST(test_default_presets);
-}
-
 void preset_test_setup(void) {
 	mkdir("/fakehome", 0775);
 	mkdir("/fakehome/.local", 0775);
@@ -76,7 +51,20 @@ MU_TEST(test_no_xdg_data_home) {
 MU_TEST(test_no_home) {
 	unsetenv("HOME");
 	unsetenv("XDG_DATA_HOME");
-	_test_default_presets();
+	struct Presets expected = {
+		.items = malloc(sizeof(struct Preset)),
+		.size = 0,
+	};
+	expected.items[0] = (struct Preset){
+		.name = "Default",
+		.bpm = 120,
+		.rhythm = ">...",
+	};
+	struct Presets result;
+	get_presets(&result);
+	presets_equal(&expected, &result);
+	free(expected.items);
+	free(result.items);
 }
 
 MU_TEST(test_full_presets) {
@@ -188,7 +176,6 @@ MU_TEST_SUITE(invalid_preset_test_suite) {
 }
 
 int preset_test_suites(void) {
-	MU_RUN_SUITE(default_presets_test_suite);
 	MU_RUN_SUITE(preset_test_suite);
 	MU_RUN_SUITE(invalid_preset_test_suite);
 	MU_REPORT();

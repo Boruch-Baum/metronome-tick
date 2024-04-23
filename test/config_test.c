@@ -22,38 +22,6 @@ void configs_equal(struct Config *c1, struct Config *c2) {
 	mu_assert_int_eq(c1->keys.quit, c2->keys.quit);
 }
 
-void _test_default_config(void) {
-	struct Config expected = {
-		.freq_accented = 587,
-		.freq_general = 440,
-		.interval = 20,
-		.keys = {
-			.up = 'k',
-			.down = 'j',
-			.next = 'l',
-			.prev = 'h',
-			.toggle_play = ' ',
-			.save = 's',
-			.rename = 'r',
-			.create = 'c',
-			.delete = 'd',
-			.open_prompt = ':',
-			.quit = 'q',
-		},
-	};
-	struct Config result;
-	get_config(&result);
-	configs_equal(&expected, &result);
-}
-
-MU_TEST(test_default_config) {
-	_test_default_config();
-}
-
-MU_TEST_SUITE(default_config_test_suite) {
-	MU_RUN_TEST(test_default_config);
-}
-
 void config_test_setup(void) {
 	mkdir("/fakehome", 0775);
 	mkdir("/fakehome/.config", 0775);
@@ -87,7 +55,27 @@ MU_TEST(test_no_xdg_config_home) {
 MU_TEST(test_no_home) {
 	unsetenv("HOME");
 	unsetenv("XDG_CONFIG_HOME");
-	_test_default_config();
+	struct Config expected = {
+		.freq_accented = 587,
+		.freq_general = 440,
+		.interval = 20,
+		.keys = {
+			.up = 'k',
+			.down = 'j',
+			.next = 'l',
+			.prev = 'h',
+			.toggle_play = ' ',
+			.save = 's',
+			.rename = 'r',
+			.create = 'c',
+			.delete = 'd',
+			.open_prompt = ':',
+			.quit = 'q',
+		},
+	};
+	struct Config result;
+	get_config(&result);
+	configs_equal(&expected, &result);
 }
 
 MU_TEST(test_full_config) {
@@ -162,7 +150,6 @@ MU_TEST_SUITE(invalid_config_test_suite) {
 }
 
 int config_test_suites(void) {
-	MU_RUN_SUITE(default_config_test_suite);
 	MU_RUN_SUITE(config_test_suite);
 	MU_RUN_SUITE(invalid_config_test_suite);
 	MU_REPORT();
