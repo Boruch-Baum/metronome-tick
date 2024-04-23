@@ -22,7 +22,7 @@ PREFIX?=/usr/local
 BINDIR?=$(PREFIX)/bin
 MANDIR?=$(PREFIX)/share/man
 
-.PHONY: build test release doc run clean
+.PHONY: build test release doc run install uninstall clean
 
 build: $(BUILD_OBJS)
 	$(CC) $(DEBUG_CFLAGS) -o $(DEBUG_DIR)/$(TARGET_NAME) $^ $(LDFLAGS)
