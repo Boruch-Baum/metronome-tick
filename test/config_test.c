@@ -23,29 +23,29 @@ void configs_equal(struct Config *c1, struct Config *c2) {
 }
 
 void config_test_setup(void) {
-	mkdir("/fakehome", 0775);
-	mkdir("/fakehome/.config", 0775);
-	mkdir("/fakehome/.config/tick", 0775);
-	mkdir("/home/fakeuser", 0775);
-	mkdir("/home/fakeuser/.config", 0775);
-	mkdir("/home/fakeuser/.config/tick", 0775);
+	mkdir(".test_data", 0775);
+	mkdir(".test_data/.config", 0775);
+	mkdir(".test_data/.config/tick", 0775);
+	mkdir(".test_data/fakeuser", 0775);
+	mkdir(".test_data/fakeuser/.config", 0775);
+	mkdir(".test_data/fakeuser/.config/tick", 0775);
 }
 
 void config_test_teardown(void) {
-	system("rm -r /fakehome /home/fakeuser");
+	system("rm -r .test_data");
 }
 
 MU_TEST(test_xdg_config_home) {
-	write_file("/home/fakeuser/.config/tick/tick.ini", "freq>=2\n");
-	setenv("XDG_CONFIG_HOME", "/home/fakeuser/.config", 1);
+	write_file(".test_data/fakeuser/.config/tick/tick.ini", "freq>=2\n");
+	setenv("XDG_CONFIG_HOME", ".test_data/fakeuser/.config", 1);
 	struct Config config;
 	get_config(&config);
 	mu_assert_int_eq(2, config.freq_accented);
 }
 
 MU_TEST(test_no_xdg_config_home) {
-	write_file("/fakehome/.config/tick/tick.ini", "freq>=1\n");
-	setenv("HOME", "/fakehome", 1);
+	write_file(".test_data/.config/tick/tick.ini", "freq>=1\n");
+	setenv("HOME", ".test_data", 1);
 	unsetenv("XDG_CONFIG_HOME");
 	struct Config config;
 	get_config(&config);
@@ -79,8 +79,8 @@ MU_TEST(test_no_home) {
 }
 
 MU_TEST(test_full_config) {
-	setenv("XDG_CONFIG_HOME", "/home/fakeuser/.config", 1);
-	copy_file("/home/fakeuser/.config/tick/tick.ini", "test/data/tick.ini");
+	setenv("XDG_CONFIG_HOME", ".test_data/fakeuser/.config", 1);
+	copy_file(".test_data/fakeuser/.config/tick/tick.ini", "test/data/tick.ini");
 	struct Config expected = {
 		.freq_accented = 2,
 		.freq_general = 3,
@@ -113,13 +113,10 @@ MU_TEST_SUITE(config_test_suite) {
 }
 
 void invalid_config_test_setup(void) {
-	mkdir("/home/fakeuser", 0755);
-	mkdir("/home/fakeuser/.config", 0755);
-	mkdir("/home/fakeuser/.config/tick", 0755);
-}
-
-void invalid_config_test_teardown(void) {
-	system("rm -r /home/fakeuser");
+	mkdir(".test_data", 0755);
+	mkdir(".test_data/fakeuser", 0755);
+	mkdir(".test_data/fakeuser/.config", 0755);
+	mkdir(".test_data/fakeuser/.config/tick", 0755);
 }
 
 void fork_config_callback(void) {
@@ -128,7 +125,7 @@ void fork_config_callback(void) {
 }
 
 MU_TEST(test_missing_equal_sign) {
-	write_file("/home/fakeuser/.config/tick/tick.ini", "freq> 23\n");
+	write_file(".test_data/fakeuser/.config/tick/tick.ini", "freq> 23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_config_callback);
 	mu_assert_int_eq(1, ret);
@@ -136,7 +133,7 @@ MU_TEST(test_missing_equal_sign) {
 }
 
 MU_TEST(test_unrecognized_key) {
-	write_file("/home/fakeuser/.config/tick/tick.ini", "freq=23\n");
+	write_file(".test_data/fakeuser/.config/tick/tick.ini", "freq=23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_config_callback);
 	mu_assert_int_eq(1, ret);
@@ -144,7 +141,7 @@ MU_TEST(test_unrecognized_key) {
 }
 
 MU_TEST_SUITE(invalid_config_test_suite) {
-	MU_SUITE_CONFIGURE(&invalid_config_test_setup, &invalid_config_test_teardown);
+	MU_SUITE_CONFIGURE(&invalid_config_test_setup, &config_test_teardown);
 	MU_RUN_TEST(test_missing_equal_sign);
 	MU_RUN_TEST(test_unrecognized_key);
 }

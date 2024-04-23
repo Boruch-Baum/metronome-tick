@@ -15,23 +15,23 @@ void presets_equal(struct Presets *p1, struct Presets *p2) {
 }
 
 void preset_test_setup(void) {
-	mkdir("/fakehome", 0775);
-	mkdir("/fakehome/.local", 0775);
-	mkdir("/fakehome/.local/share", 0775);
-	mkdir("/fakehome/.local/share/tick", 0775);
-	mkdir("/home/fakeuser", 0775);
-	mkdir("/home/fakeuser/.local", 0775);
-	mkdir("/home/fakeuser/.local/share", 0775);
-	mkdir("/home/fakeuser/.local/share/tick", 0775);
+	mkdir(".test_data", 0775);
+	mkdir(".test_data/.local", 0775);
+	mkdir(".test_data/.local/share", 0775);
+	mkdir(".test_data/.local/share/tick", 0775);
+	mkdir(".test_data/fakeuser", 0775);
+	mkdir(".test_data/fakeuser/.local", 0775);
+	mkdir(".test_data/fakeuser/.local/share", 0775);
+	mkdir(".test_data/fakeuser/.local/share/tick", 0775);
 }
 
 void preset_test_teardown(void) {
-	system("rm -r /fakehome /home/fakeuser");
+	system("rm -r .test_data");
 }
 
 MU_TEST(test_xdg_data_home) {
-	write_file("/home/fakeuser/.local/share/tick/presets.ini", "[a]\n");
-	setenv("XDG_DATA_HOME", "/home/fakeuser/.local/share", 1);
+	write_file(".test_data/fakeuser/.local/share/tick/presets.ini", "[a]\n");
+	setenv("XDG_DATA_HOME", ".test_data/fakeuser/.local/share", 1);
 	struct Presets presets;
 	get_presets(&presets);
 	mu_assert_string_eq("a", presets.items[0].name);
@@ -39,8 +39,8 @@ MU_TEST(test_xdg_data_home) {
 }
 
 MU_TEST(test_no_xdg_data_home) {
-	write_file("/fakehome/.local/share/tick/presets.ini", "[b]\nbpm=1\nrhythm=.\n");
-	setenv("HOME", "/fakehome", 1);
+	write_file(".test_data/.local/share/tick/presets.ini", "[b]\nbpm=1\nrhythm=.\n");
+	setenv("HOME", ".test_data", 1);
 	unsetenv("XDG_DATA_HOME");
 	struct Presets presets;
 	get_presets(&presets);
@@ -68,8 +68,8 @@ MU_TEST(test_no_home) {
 }
 
 MU_TEST(test_full_presets) {
-	setenv("XDG_DATA_HOME", "/home/fakeuser/.local/share", 1);
-	copy_file("/home/fakeuser/.local/share/tick/presets.ini", "test/data/presets.ini");
+	setenv("XDG_DATA_HOME", ".test_data/fakeuser/.local/share", 1);
+	copy_file(".test_data/fakeuser/.local/share/tick/presets.ini", "test/data/presets.ini");
 	struct Presets expected = {
 		.items = malloc(sizeof(struct Preset) * 6),
 		.size = 6,
@@ -120,14 +120,11 @@ MU_TEST_SUITE(preset_test_suite) {
 }
 
 void invalid_preset_test_setup(void) {
-	mkdir("/home/fakeuser", 0755);
-	mkdir("/home/fakeuser/.local", 0755);
-	mkdir("/home/fakeuser/.local/share", 0755);
-	mkdir("/home/fakeuser/.local/share/tick", 0755);
-}
-
-void invalid_preset_test_teardown(void) {
-	system("rm -r /home/fakeuser");
+	mkdir(".test_data", 0755);
+	mkdir(".test_data/fakeuser", 0755);
+	mkdir(".test_data/fakeuser/.local", 0755);
+	mkdir(".test_data/fakeuser/.local/share", 0755);
+	mkdir(".test_data/fakeuser/.local/share/tick", 0755);
 }
 
 void fork_presets_callback(void) {
@@ -136,7 +133,7 @@ void fork_presets_callback(void) {
 }
 
 MU_TEST(test_unmatched_bracket) {
-	write_file("/home/fakeuser/.local/share/tick/presets.ini", "[preset name\n");
+	write_file(".test_data/fakeuser/.local/share/tick/presets.ini", "[preset name\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
 	mu_assert_int_eq(1, ret);
@@ -144,7 +141,7 @@ MU_TEST(test_unmatched_bracket) {
 }
 
 MU_TEST(test_empty_preset_name) {
-	write_file("/home/fakeuser/.local/share/tick/presets.ini", "[]\n");
+	write_file(".test_data/fakeuser/.local/share/tick/presets.ini", "[]\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
 	mu_assert_int_eq(1, ret);
@@ -152,7 +149,7 @@ MU_TEST(test_empty_preset_name) {
 }
 
 MU_TEST(test_missing_equal_sign) {
-	write_file("/home/fakeuser/.local/share/tick/presets.ini", "bpm 23\n");
+	write_file(".test_data/fakeuser/.local/share/tick/presets.ini", "bpm 23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
 	mu_assert_int_eq(1, ret);
@@ -160,7 +157,7 @@ MU_TEST(test_missing_equal_sign) {
 }
 
 MU_TEST(test_unrecognized_key) {
-	write_file("/home/fakeuser/.local/share/tick/presets.ini", "up=23\n");
+	write_file(".test_data/fakeuser/.local/share/tick/presets.ini", "up=23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
 	mu_assert_int_eq(1, ret);
@@ -168,7 +165,7 @@ MU_TEST(test_unrecognized_key) {
 }
 
 MU_TEST_SUITE(invalid_preset_test_suite) {
-	MU_SUITE_CONFIGURE(&invalid_preset_test_setup, &invalid_preset_test_teardown);
+	MU_SUITE_CONFIGURE(&invalid_preset_test_setup, &preset_test_teardown);
 	MU_RUN_TEST(test_unmatched_bracket);
 	MU_RUN_TEST(test_empty_preset_name);
 	MU_RUN_TEST(test_missing_equal_sign);

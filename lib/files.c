@@ -10,7 +10,7 @@ void get_xdg_path(char *path, char *xdg_dir, char *default_dir, char *subpath) {
 	if (dir == NULL || dir[0] == '\0') {
 		const char *HOME = getenv("HOME");
 		if (HOME == NULL || HOME[0] == '\0') {
-			path = NULL;
+			*path = '\0';
 			return;
 		}
 		snprintf(path, PATH_MAX, "%s/%s/%s", HOME, default_dir, subpath);
