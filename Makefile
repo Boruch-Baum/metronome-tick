@@ -52,7 +52,7 @@ run: build
 	@./$(DEBUG_DIR)/$(TARGET_NAME)
 
 install: release doc
-	install -m755 $(RELEASE_DIR)/$(TARGET_NAME) $(DESTDIR)$(BINDIR)/
+	install -m755 $(RELEASE_DIR)/$(TARGET_NAME) $(DESTDIR)$(BINDIR)/$(TARGET_NAME)
 	install -m644 $(DOC_DIR)/tick.1 $(DESTDIR)$(MANDIR)/man1/tick.1
 	install -m644 $(DOC_DIR)/tick-config.5 $(DESTDIR)$(MANDIR)/man5/tick-config.5
 	install -m644 $(DOC_DIR)/tick-presets.5 $(DESTDIR)$(MANDIR)/man5/tick-presets.5
