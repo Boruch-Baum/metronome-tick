@@ -1,2 +1,17 @@
 # tick
-A lightweight TUI metronome with configurable presets
+A preset-oriented TUI metronome.
+
+## Installation
+To build from source, tick requires
+the [`alsa-lib`](https://www.alsa-project.org/wiki/Download) library.
+```
+make release
+doas make PREFIX=/usr install
+```
+To uninstall
+```
+doas make PREFIX=/usr uninstall
+```
+
+## Usage
+See tick(1)
