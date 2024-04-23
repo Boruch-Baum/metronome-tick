@@ -94,6 +94,12 @@ The prompt, opened by *Show prompt* or any other keyboard command that prompts
 for further input (eg. *Rename* prompting for new preset name),
 may be cancelled with an empty input.
 
+# CAVEATS
+
+The program does not check for duplicate preset names.
+It is up to the user to ensure that the preset name is not already in use
+when creating or renaming a preset.
+
 # SEE ALSO
 
 tick-config(5), tick-presets(5)
