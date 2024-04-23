@@ -40,7 +40,7 @@ MU_TEST(test_xdg_config_home) {
 	setenv("XDG_CONFIG_HOME", "/home/fakeuser/.config", 1);
 	struct Config config;
 	get_config(&config);
-	mu_assert_int_eq(config.freq_accented, 2);
+	mu_assert_int_eq(2, config.freq_accented);
 }
 
 MU_TEST(test_no_xdg_config_home) {
@@ -49,7 +49,7 @@ MU_TEST(test_no_xdg_config_home) {
 	unsetenv("XDG_CONFIG_HOME");
 	struct Config config;
 	get_config(&config);
-	mu_assert_int_eq(config.freq_accented, 1);
+	mu_assert_int_eq(1, config.freq_accented);
 }
 
 MU_TEST(test_no_home) {
@@ -131,7 +131,7 @@ MU_TEST(test_missing_equal_sign) {
 	write_file("/home/fakeuser/.config/tick/tick.ini", "freq> 23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_config_callback);
-	mu_assert_int_eq(ret, 1);
+	mu_assert_int_eq(1, ret);
 	mu_assert_string_eq("Invalid configuration: expect key=value\n", output);
 }
 
@@ -139,7 +139,7 @@ MU_TEST(test_unrecognized_key) {
 	write_file("/home/fakeuser/.config/tick/tick.ini", "freq=23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_config_callback);
-	mu_assert_int_eq(ret, 1);
+	mu_assert_int_eq(1, ret);
 	mu_assert_string_eq("Invalid configuration: unrecognized key 'freq'\n", output);
 }
 

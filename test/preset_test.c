@@ -34,7 +34,7 @@ MU_TEST(test_xdg_data_home) {
 	setenv("XDG_DATA_HOME", "/home/fakeuser/.local/share", 1);
 	struct Presets presets;
 	get_presets(&presets);
-	mu_assert_string_eq(presets.items[0].name, "a");
+	mu_assert_string_eq("a", presets.items[0].name);
 	free(presets.items);
 }
 
@@ -44,7 +44,7 @@ MU_TEST(test_no_xdg_data_home) {
 	unsetenv("XDG_DATA_HOME");
 	struct Presets presets;
 	get_presets(&presets);
-	mu_assert_string_eq(presets.items[0].name, "b");
+	mu_assert_string_eq("b", presets.items[0].name);
 	free(presets.items);
 }
 
@@ -139,7 +139,7 @@ MU_TEST(test_unmatched_bracket) {
 	write_file("/home/fakeuser/.local/share/tick/presets.ini", "[preset name\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
-	mu_assert_int_eq(ret, 1);
+	mu_assert_int_eq(1, ret);
 	mu_assert_string_eq("Invalid configuration: unmatched '['\n", output);
 }
 
@@ -147,7 +147,7 @@ MU_TEST(test_empty_preset_name) {
 	write_file("/home/fakeuser/.local/share/tick/presets.ini", "[]\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
-	mu_assert_int_eq(ret, 1);
+	mu_assert_int_eq(1, ret);
 	mu_assert_string_eq("Invalid configuration: preset name must be non-empty\n", output);
 }
 
@@ -155,7 +155,7 @@ MU_TEST(test_missing_equal_sign) {
 	write_file("/home/fakeuser/.local/share/tick/presets.ini", "bpm 23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
-	mu_assert_int_eq(ret, 1);
+	mu_assert_int_eq(1, ret);
 	mu_assert_string_eq("Invalid configuration: expect key=value\n", output);
 }
 
@@ -163,7 +163,7 @@ MU_TEST(test_unrecognized_key) {
 	write_file("/home/fakeuser/.local/share/tick/presets.ini", "up=23\n");
 	char output[MAX_ERROR_LEN];
 	int ret = fork_function(output, fork_presets_callback);
-	mu_assert_int_eq(ret, 1);
+	mu_assert_int_eq(1, ret);
 	mu_assert_string_eq("Invalid configuration: unrecognized key 'up'\n", output);
 }
 
