@@ -11,7 +11,7 @@ tick(1), as well as general metronome settings such as the interval and pitch.
 
 Each value is defined in the format of
 
-<name>*=*<value>
+*name*=*value*
 
 with no spaces around the equal sign.
 
