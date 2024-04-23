@@ -8,6 +8,7 @@ TARGET_NAME := tick
 TARGET_DIR := target
 DEBUG_DIR := $(TARGET_DIR)/debug
 RELEASE_DIR := $(TARGET_DIR)/release
+DOC_DIR := $(TARGET_DIR)/doc
 
 LIB_SRCS := $(wildcard lib/*.c)
 TEST_SRCS := $(wildcard test/*.c)
@@ -16,6 +17,10 @@ BUILD_OBJS := $(LIB_SRCS:%.c=$(DEBUG_DIR)/%.o) $(DEBUG_DIR)/main.o
 TEST_OBJS := $(LIB_SRCS:%.c=$(DEBUG_DIR)/%.o) $(TEST_SRCS:%.c=$(DEBUG_DIR)/%.o)
 RELEASE_OBJS := $(LIB_SRCS:%.c=$(RELEASE_DIR)/%.o) $(RELEASE_DIR)/main.o
 DOC_OUTPUTS := $(DOC_SRCS:%.scd=$(TARGET_DIR)/%)
+
+PREFIX?=/usr/local
+BINDIR?=$(PREFIX)/bin
+MANDIR?=$(PREFIX)/share/man
 
 .PHONY: build test release doc run clean
 
@@ -45,6 +50,18 @@ $(TARGET_DIR)/%: %.scd
 
 run: build
 	@./$(DEBUG_DIR)/$(TARGET_NAME)
+
+install: release doc
+	install -m755 $(RELEASE_DIR)/$(TARGET_NAME) $(DESTDIR)$(BINDIR)/
+	install -m644 $(DOC_DIR)/tick.1 $(DESTDIR)$(MANDIR)/man1/tick.1
+	install -m644 $(DOC_DIR)/tick-config.5 $(DESTDIR)$(MANDIR)/man5/tick-config.5
+	install -m644 $(DOC_DIR)/tick-presets.5 $(DESTDIR)$(MANDIR)/man5/tick-presets.5
+
+uninstall:
+	rm -f $(DESTDIR)$(BINDIR)/$(TARGET_NAME) \
+		$(DESTDIR)$(MANDIR)/man1/tick.1 \
+		$(DESTDIR)$(MANDIR)/man5/tick-config.5 \
+		$(DESTDIR)$(MANDIR)/man5/tick-presets.5
 
 clean:
 	rm -rf $(TARGET_DIR)
