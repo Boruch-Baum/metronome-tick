@@ -8,7 +8,6 @@ TARGET_NAME := tick
 TARGET_DIR := target
 DEBUG_DIR := $(TARGET_DIR)/debug
 RELEASE_DIR := $(TARGET_DIR)/release
-DOC_DIR := $(TARGET_DIR)
 
 LIB_SRCS := $(wildcard lib/*.c)
 TEST_SRCS := $(wildcard test/*.c)
@@ -16,7 +15,7 @@ DOC_SRCS := $(wildcard doc/*.scd)
 BUILD_OBJS := $(LIB_SRCS:%.c=$(DEBUG_DIR)/%.o) $(DEBUG_DIR)/main.o
 TEST_OBJS := $(LIB_SRCS:%.c=$(DEBUG_DIR)/%.o) $(TEST_SRCS:%.c=$(DEBUG_DIR)/%.o)
 RELEASE_OBJS := $(LIB_SRCS:%.c=$(RELEASE_DIR)/%.o) $(RELEASE_DIR)/main.o
-DOC_OUTPUTS := $(DOC_SRCS:%.scd=$(DOC_DIR)/%)
+DOC_OUTPUTS := $(DOC_SRCS:%.scd=$(TARGET_DIR)/%)
 
 .PHONY: build test release doc run clean
 
@@ -40,7 +39,7 @@ $(RELEASE_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(RELEASE_CFLAGS) -MMD -MP -c $< -o $@
 
-$(DOC_DIR)/%: %.scd
+$(TARGET_DIR)/%: %.scd
 	mkdir -p $(dir $@)
 	scdoc < $< > $@
 
