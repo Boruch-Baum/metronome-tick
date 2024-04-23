@@ -53,7 +53,7 @@ int main(void) {
 			} else {
 				display_player_state(&m);
 			}
-		} else if (c == m.config.keys.show_prompt) {
+		} else if (c == m.config.keys.open_prompt) {
 			char line[MAX_COMMAND_LEN];
 			get_command(line, MAX_COMMAND_LEN, ":");
 			char *pos = strchr(line, ' ');

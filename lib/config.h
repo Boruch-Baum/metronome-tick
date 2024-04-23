@@ -8,7 +8,7 @@ struct Keys {
 	char rename;
 	char create;
 	char delete;
-	char show_prompt;
+	char open_prompt;
 	char quit;
 };
 

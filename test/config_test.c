@@ -18,7 +18,7 @@ void configs_equal(struct Config *c1, struct Config *c2) {
 	mu_assert_int_eq(c1->keys.rename, c2->keys.rename);
 	mu_assert_int_eq(c1->keys.create, c2->keys.create);
 	mu_assert_int_eq(c1->keys.delete, c2->keys.delete);
-	mu_assert_int_eq(c1->keys.show_prompt, c2->keys.show_prompt);
+	mu_assert_int_eq(c1->keys.open_prompt, c2->keys.open_prompt);
 	mu_assert_int_eq(c1->keys.quit, c2->keys.quit);
 }
 
@@ -37,7 +37,7 @@ void _test_default_config(void) {
 			.rename = 'r',
 			.create = 'c',
 			.delete = 'd',
-			.show_prompt = ':',
+			.open_prompt = ':',
 			.quit = 'q',
 		},
 	};
@@ -107,7 +107,7 @@ MU_TEST(test_full_config) {
 			.rename = 'g',
 			.create = 'h',
 			.delete = 'i',
-			.show_prompt = ';',
+			.open_prompt = ';',
 			.quit = 'w',
 		},
 	};
