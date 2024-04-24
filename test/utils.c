@@ -48,7 +48,8 @@ int fork_function(char *output, void (*func)(void)) {
 		int status;
 		waitpid(pid, &status, 0);
 		assert(WIFEXITED(status));
-		read(pipefd[0], output, MAX_ERROR_LEN);
+		int len = read(pipefd[0], output, MAX_ERROR_LEN);
+		output[len] = '\0';
 		return WEXITSTATUS(status);
 	}
 }
