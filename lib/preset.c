@@ -138,7 +138,7 @@ void delete_preset(struct Presets *presets, int i) {
 
 void process_presets_file(struct Presets *presets, FILE *file) {
 	char line[MAX_LINE_LEN];
-	char error[MAX_LINE_LEN+18]; // 19 from "unrecognized key ''" - 1 from "="
+	char error[MAX_LINE_LEN+19]; // 19 from "unrecognized key ''"
 	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
 		if (line[0] == '[') {
 			char *pos = strrchr(line, ']');

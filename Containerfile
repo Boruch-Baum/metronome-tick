@@ -1,7 +1,7 @@
-FROM alpine:edge AS tick-test-deps
-RUN ["apk", "add", "alsa-lib-dev", "clang", "compiler-rt", "make"]
+FROM alpine:edge AS tick-deps
+RUN ["apk", "add", "alsa-lib-dev", "gcc", "make", "musl-dev"]
 
-FROM tick-test-deps
+FROM tick-deps
 WORKDIR /app
 COPY lib lib
 COPY test test

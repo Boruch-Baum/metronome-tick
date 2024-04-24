@@ -3,8 +3,7 @@ A preset-oriented TUI metronome.
 
 ## Installation
 To build from source, tick requires
-the [`alsa-lib`](https://www.alsa-project.org/wiki/Download) library,
-[`clang`](https://releases.llvm.org/download.html) compiler,
+the [`alsa-lib`](https://www.alsa-project.org/wiki/Download) library
 and [`scdoc`](https://sr.ht/~sircmpwn/scdoc/) for generating man pages.
 ```
 make release

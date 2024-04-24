@@ -1,6 +1,6 @@
 #include "../lib/files.h"
 
-#define MAX_ERROR_LEN (MAX_LINE_LEN + 18 + 24) // error len + 24 from "Invalid configuration: \n"
+#define MAX_ERROR_LEN (MAX_LINE_LEN + 19 + 24) // error len + 24 from "Invalid configuration: \n"
 
 void write_file(char*, char*);
 void copy_file(char*, char*);

@@ -8,7 +8,7 @@
 
 void process_config_file(struct Config *config, FILE *file) {
 	char line[MAX_LINE_LEN];
-	char error[MAX_LINE_LEN+18]; // 19 from "unrecognized key ''" - 1 from "="
+	char error[MAX_LINE_LEN+19]; // 19 from "unrecognized key ''"
 	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
 		if (line[0] == '#' && line[0] == '\n') {
 			continue;

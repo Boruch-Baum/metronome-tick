@@ -1,8 +1,8 @@
-CC := clang
-LDFLAGS := -lasound
-CFLAGS := -Wall -Wextra -Werror -pedantic
-DEBUG_CFLAGS := $(CFLAGS) -fsanitize=address,leak,undefined
-RELEASE_CFLAGS := $(CFLAGS) -O3 -fomit-frame-pointer -flto
+CC ?= gcc
+LDFLAGS += -lasound
+CFLAGS += -Wall -Wextra -Werror -pedantic
+DEBUG_CFLAGS := -g $(CFLAGS)
+RELEASE_CFLAGS := -Os -fomit-frame-pointer -flto -fno-plt $(CFLAGS)
 
 TARGET_NAME := tick
 TARGET_DIR := target
@@ -18,9 +18,9 @@ TEST_OBJS := $(LIB_SRCS:%.c=$(DEBUG_DIR)/%.o) $(TEST_SRCS:%.c=$(DEBUG_DIR)/%.o)
 RELEASE_OBJS := $(LIB_SRCS:%.c=$(RELEASE_DIR)/%.o) $(RELEASE_DIR)/main.o
 DOC_OUTPUTS := $(DOC_SRCS:%.scd=$(TARGET_DIR)/%)
 
-PREFIX?=/usr/local
-BINDIR?=$(PREFIX)/bin
-MANDIR?=$(PREFIX)/share/man
+PREFIX ?= /usr/local
+BINDIR ?= $(PREFIX)/bin
+MANDIR ?= $(PREFIX)/share/man
 
 .PHONY: build test release doc run install uninstall clean
 
