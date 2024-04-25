@@ -3,6 +3,8 @@
 
 #define SAMPLE_RATE 8000 // number of values per second
 #define PEAK_TO_PEAK 256 // 2^8 for uint8_t
+#define AMPLITUDE (PEAK_TO_PEAK / 2)
+#define SINE_FACTOR (2 * M_PI / (PEAK_TO_PEAK - 1))
 
 void prepare_player(snd_pcm_t **pcm) {
 	int rc = snd_pcm_open(pcm, "default", SND_PCM_STREAM_PLAYBACK, 0);
@@ -38,11 +40,9 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 		}
 		int inc = PEAK_TO_PEAK * freq / SAMPLE_RATE;
 		int offset = i * tick_frame_size;
-		int amplitude = PEAK_TO_PEAK / 2;
-		float factor = 2 * M_PI / (PEAK_TO_PEAK - 1);
 		for (int j = 0, osc = 0; j < tick_frame_size / 4; j++, osc += inc) {
 			// https://zserge.com/posts/etude-in-c/
-			buffer[offset+j] = amplitude*sin(osc*factor) + amplitude;
+			buffer[offset+j] = AMPLITUDE*sin(osc*SINE_FACTOR) + AMPLITUDE;
 		}
 	}
 	return buffer;
