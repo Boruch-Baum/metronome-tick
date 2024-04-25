@@ -34,6 +34,7 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 			break;
 		default:
 			freq = 0;
+			continue;
 		}
 		int inc = PEAK_TO_PEAK * freq / SAMPLE_RATE;
 		int offset = i * tick_frame_size;
@@ -41,7 +42,7 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 		float factor = 2 * M_PI / (PEAK_TO_PEAK - 1);
 		for (int j = 0, osc = 0; j < tick_frame_size / 4; j++, osc += inc) {
 			// https://zserge.com/posts/etude-in-c/
-			buffer[offset + j] = amplitude*sin(osc*factor) + amplitude;
+			buffer[offset+j] = amplitude*sin(osc*factor) + amplitude;
 		}
 	}
 	return buffer;
