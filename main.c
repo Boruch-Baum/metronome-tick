@@ -1,7 +1,32 @@
 #include "lib/input.h"
 #include "lib/metronome.h"
+#include <limits.h>
 
-int main(void) {
+int main(int argc, char *argv[]) {
+	if (argc > 1) {
+		const char *editor = getenv("EDITOR");
+		if (editor == NULL || editor[0] == '\0') {
+			fputs("The $EDITOR environment variable is not set\n", stderr);
+			return EXIT_FAILURE;
+		}
+		char path[PATH_MAX];
+		if (strcmp(argv[1], "presets") == 0) {
+			get_presets_path(path);
+		} else if (strcmp(argv[1], "config") == 0) {
+			get_config_path(path);
+		} else {
+			fprintf(stderr, "Unrecognized argument: %s\n", argv[1]);
+			return EXIT_FAILURE;
+		}
+		if (path[0] == '\0') {
+			fputs("The environment variables for HOME and the XDG directories are not set\n", stderr);
+			return EXIT_FAILURE;
+		}
+		execlp(editor, editor, path, NULL);
+		perror("execlp");
+		return EXIT_FAILURE;
+	}
+
 	struct Metronome m;
 	init_metronome(&m);
 	start_metronome(&m);

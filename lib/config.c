@@ -1,10 +1,15 @@
 #include "config.h"
 #include "files.h"
 #include "keys.h"
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_KEY_STR_LEN 20 // "right arrow\0" + 8 escape characters from bolding
+
+void get_config_path(char *path) {
+	get_xdg_path(path, "XDG_CONFIG_HOME", ".config", "tick/tick.ini");
+}
 
 void process_config_file(struct Config *config, FILE *file) {
 	char line[MAX_LINE_LEN];
@@ -80,7 +85,9 @@ void get_config(struct Config *config) {
 			.quit = 'q',
 		},
 	};
-	FILE *file = read_xdg_file("XDG_CONFIG_HOME", ".config", "tick/tick.ini");
+	char path[PATH_MAX];
+	get_config_path(path);
+	FILE *file = fopen(path, "r");
 	if (file != NULL) {
 		process_config_file(config, file);
 		fclose(file);

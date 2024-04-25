@@ -15,6 +15,7 @@ struct Presets {
 	int capacity;
 };
 
+void get_presets_path(char*);
 void get_presets(struct Presets*);
 void rename_preset(struct Preset*, char*);
 void edit_preset_settings(struct Preset*, int, char*);

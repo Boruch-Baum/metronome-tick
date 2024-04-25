@@ -4,9 +4,19 @@ TICK(1)
 
 tick - a preset-oriented TUI metronome
 
+# SYNOPSIS
+
+*tick* [*config*|*presets*]
+
 # DESCRIPTION
 
-The tick program plays metronome at the specified BPM and rhythm.
+When called with the *config* or *presets* argument,
+the tick program opens the config or presets file for editing,
+using the command defined in the $EDITOR environment variable.
+See tick-config(5) and tick-presets(5) for details of the files.
+
+When called without arguments,
+the tick program plays metronome at the specified BPM and rhythm.
 
 The BPM and rhythm can be adjusted manually or loaded from a _preset_.
 A _preset_ is an object consisting of a name, a BPM, and a rhythm.

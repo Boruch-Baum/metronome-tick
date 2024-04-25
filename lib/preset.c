@@ -8,6 +8,10 @@
 
 static char presets_path[PATH_MAX];
 
+void get_presets_path(char *path) {
+	get_xdg_path(path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
+}
+
 void add_to_presets(struct Presets *presets, struct Preset *preset) {
 	if (presets->size == presets->capacity) {
 		presets->capacity *= 2;
@@ -188,7 +192,7 @@ void get_presets(struct Presets *presets) {
 		.size = 0,
 		.capacity = INIT_PRESETS_CAPACITY,
 	};
-	get_xdg_path(presets_path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
+	get_presets_path(presets_path);
 	FILE *file = fopen(presets_path, "r");
 	if (file != NULL) {
 		process_presets_file(presets, file);

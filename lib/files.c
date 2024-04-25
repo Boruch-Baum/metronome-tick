@@ -19,12 +19,6 @@ void get_xdg_path(char *path, char *xdg_dir, char *default_dir, char *subpath) {
 	}
 }
 
-FILE *read_xdg_file(char *xdg_dir, char *default_dir, char *subpath) {
-	char path[PATH_MAX];
-	get_xdg_path(path, xdg_dir, default_dir, subpath);
-	return fopen(path, "r");
-}
-
 int mktemp_in_tmpdir(char *template) {
 	char temp_dir[PATH_MAX];
 	const char *TMPDIR = getenv("TMPDIR");

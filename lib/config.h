@@ -19,5 +19,6 @@ struct Config {
 	struct Keys keys;
 };
 
+void get_config_path(char*);
 void get_config(struct Config*);
 void display_keybinds(struct Config*);
