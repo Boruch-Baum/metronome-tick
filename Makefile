@@ -1,6 +1,7 @@
+VERSION := 1.1.0
 CC ?= gcc
 LDFLAGS += -lasound
-CFLAGS += -Wall -Wextra -Werror -pedantic
+CFLAGS += -DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -pedantic
 DEBUG_CFLAGS := -g $(CFLAGS)
 RELEASE_CFLAGS := -Os -fomit-frame-pointer -flto -fno-plt $(CFLAGS)
 

@@ -6,7 +6,7 @@ tick - a preset-oriented TUI metronome
 
 # SYNOPSIS
 
-*tick* [*config*|*presets*]
+*tick* [*-v*|*--version*] [*config*|*presets*]
 
 # DESCRIPTION
 
