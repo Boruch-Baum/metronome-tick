@@ -1,5 +1,5 @@
 # tick
-A preset-oriented TUI metronome.
+A preset-oriented metronome TUI.
 
 ## Installation
 To build from source, tick requires

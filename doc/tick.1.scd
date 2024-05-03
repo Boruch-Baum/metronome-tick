@@ -2,7 +2,7 @@ TICK(1)
 
 # NAME
 
-tick - a preset-oriented TUI metronome
+tick - a preset-oriented metronome TUI
 
 # SYNOPSIS
 
