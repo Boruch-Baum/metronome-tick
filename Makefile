@@ -1,5 +1,5 @@
 VERSION := 1.1.0
-CC ?= gcc
+CC ?= tcc
 LDFLAGS += -lasound
 CFLAGS += -DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -pedantic
 DEBUG_CFLAGS := -g $(CFLAGS)
