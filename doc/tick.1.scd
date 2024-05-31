@@ -77,13 +77,16 @@ See tick-config(5) for configuring the keybinds.
 
 ## PROMPT COMMANDS
 
-*:bpm* <bpm>
+*:bpm* <bpm>++
+*:b* <bpm>++
 	Set the BPM.
 
-*:preset* <name>
+*:preset* <name>++
+*:p* <name>
 	Apply the preset. Case-sensitive.
 
-*:rhythm* <rhythm>
+*:rhythm* <rhythm>++
+*:r* <rhythm>
 	Set the rhythm.
 
 	A rhythm is represented by a sequence of greater than symbols (*>*),
@@ -96,6 +99,7 @@ See tick-config(5) for configuring the keybinds.
 	The rhythm cannot be longer than 31 characters.
 
 *:set* <rhythm>*@*<bpm>
+*:s* <rhythm>*@*<bpm>
 	Set the BPM and rhythm.
 	Note the lack of space between rhythm and BPM,
 	differing from the display format.

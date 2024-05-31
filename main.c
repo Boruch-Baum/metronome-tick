@@ -90,11 +90,14 @@ int main(int argc, char *argv[]) {
 				display_player_state(&m);
 			} else if (pos == NULL) {
 				print_error("Invalid command syntax");
-			} else if (strncmp(line, "bpm", pos-line) == 0) {
+			} else if (strncmp(line, "bpm", pos-line) == 0 ||
+					strncmp(line, "b", pos-line) == 0) {
 				set_bpm(&m, atoi(pos+1));
-			} else if (strncmp(line, "rhythm", pos-line) == 0) {
+			} else if (strncmp(line, "rhythm", pos-line) == 0 ||
+					strncmp(line, "r", pos-line) == 0) {
 				set_rhythm(&m, pos+1);
-			} else if (strncmp(line, "preset", pos-line) == 0) {
+			} else if (strncmp(line, "preset", pos-line) == 0 ||
+					strncmp(line, "p", pos-line) == 0) {
 				int found = 0;
 				for (int i = 0; i < m.presets.size; i++) {
 					if (strcmp(m.presets.items[i].name, pos+1) == 0) {
@@ -106,7 +109,8 @@ int main(int argc, char *argv[]) {
 					display_player_state(&m);
 					print_error("Cannot find preset with name '%s'", pos+1);
 				}
-			} else if (strncmp(line, "set", pos-line) == 0) {
+			} else if (strncmp(line, "set", pos-line) == 0 ||
+					strncmp(line, "s", pos-line) == 0) {
 				char *sep = strchr(pos+1, '@');
 				if (sep-pos > MAX_RHYTHM_LEN) { // sep - (pos + 1) > MAX_RHYTHM_LEN - 1
 					print_error("Rhythm cannot be longer than %d characters", MAX_RHYTHM_LEN-1);
