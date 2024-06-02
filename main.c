@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 		} else if (strcmp(argv[1], "config") == 0) {
 			get_config_path(path);
 		} else {
-			fprintf(stderr, "Unrecognized argument: %s\n", argv[1]);
+			fprintf(stderr, "Unrecognized input: %s\nUsage: tick [-v | --version] [config | presets]\n", argv[1]);
 			return EXIT_FAILURE;
 		}
 		if (path[0] == '\0') {
