@@ -38,32 +38,32 @@ release: $(RELEASE_OBJS)
 doc: $(DOC_OUTPUTS)
 
 $(DEBUG_DIR)/%.o: %.c
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(DEBUG_CFLAGS) -MMD -MP -c $< -o $@
 
 $(RELEASE_DIR)/%.o: %.c
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(RELEASE_CFLAGS) -MMD -MP -c $< -o $@
 
 $(TARGET_DIR)/%: %.scd
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	scdoc < $< > $@
 
 run: build
 	@./$(DEBUG_DIR)/$(TARGET_NAME)
 
 install: release doc
-	mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1 $(DESTDIR)$(MANDIR)/man5
+	@mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1 $(DESTDIR)$(MANDIR)/man5
 	install -m755 $(RELEASE_DIR)/$(TARGET_NAME) $(DESTDIR)$(BINDIR)/$(TARGET_NAME)
 	install -m644 $(DOC_DIR)/tick.1 $(DESTDIR)$(MANDIR)/man1/tick.1
 	install -m644 $(DOC_DIR)/tick-config.5 $(DESTDIR)$(MANDIR)/man5/tick-config.5
 	install -m644 $(DOC_DIR)/tick-presets.5 $(DESTDIR)$(MANDIR)/man5/tick-presets.5
 
 uninstall:
-	rm -f $(DESTDIR)$(BINDIR)/$(TARGET_NAME) \
+	@rm -f $(DESTDIR)$(BINDIR)/$(TARGET_NAME) \
 		$(DESTDIR)$(MANDIR)/man1/tick.1 \
 		$(DESTDIR)$(MANDIR)/man5/tick-config.5 \
 		$(DESTDIR)$(MANDIR)/man5/tick-presets.5
 
 clean:
-	rm -rf $(TARGET_DIR)
+	@rm -rf $(TARGET_DIR)
