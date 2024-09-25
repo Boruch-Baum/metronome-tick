@@ -24,7 +24,7 @@ void prepare_player(snd_pcm_t **pcm) {
 uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 	int tick_frame_size = SAMPLE_RATE / ps->bpm * 60; // SAMPLE_RATE / (bpm / 60)
 	*buff_size = tick_frame_size * strlen(ps->rhythm);
-	uint8_t *buffer = calloc(sizeof(uint8_t), *buff_size);
+	uint8_t *buffer = calloc(*buff_size, sizeof(uint8_t));
 	int freq;
 	for (int i = 0; ps->rhythm[i] != '\0'; i++) {
 		switch (ps->rhythm[i]) {
