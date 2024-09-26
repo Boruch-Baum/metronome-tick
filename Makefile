@@ -1,6 +1,6 @@
 VERSION := 1.2.0
 CC ?= tcc
-LDFLAGS += -lasound
+LDFLAGS += -lasound -lm
 CFLAGS += -DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -pedantic
 DEBUG_CFLAGS := -g $(CFLAGS)
 RELEASE_CFLAGS := -Os -fomit-frame-pointer -flto -fno-plt $(CFLAGS)
