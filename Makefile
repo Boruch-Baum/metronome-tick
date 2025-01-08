@@ -23,7 +23,9 @@ PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man
 
-.PHONY: build test release doc run install uninstall clean
+.PHONY: all build test release doc run install uninstall clean
+
+all: release doc
 
 build: $(BUILD_OBJS)
 	$(CC) $(DEBUG_CFLAGS) -o $(DEBUG_DIR)/$(TARGET_NAME) $^ $(LDFLAGS)
@@ -52,7 +54,7 @@ $(TARGET_DIR)/%: %.scd
 run: build
 	@./$(DEBUG_DIR)/$(TARGET_NAME)
 
-install: release doc
+install: all
 	@mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1 $(DESTDIR)$(MANDIR)/man5
 	install -m755 $(RELEASE_DIR)/$(TARGET_NAME) $(DESTDIR)$(BINDIR)/$(TARGET_NAME)
 	install -m644 $(DOC_DIR)/tick.1 $(DESTDIR)$(MANDIR)/man1/tick.1
