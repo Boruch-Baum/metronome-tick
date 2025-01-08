@@ -20,3 +20,7 @@ doas make uninstall
 
 ## Usage
 See tick(1)
+
+## Contributing
+Send discussions and patches to the public inbox at
+https://lists.sr.ht/~liliace/public-inbox
