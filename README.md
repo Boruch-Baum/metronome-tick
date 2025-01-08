@@ -2,16 +2,20 @@
 A preset-oriented metronome TUI.
 
 ## Installation
-To build from source, tick requires
-the [`alsa-lib`](https://www.alsa-project.org/wiki/Download) library
-and [`scdoc`](https://sr.ht/~sircmpwn/scdoc/) for generating man pages.
+Build time dependencies:
+- [alsa-lib](https://www.alsa-project.org/wiki/Download)
+- [scdoc](https://sr.ht/~sircmpwn/scdoc/)
+- [GNU Make](https://www.gnu.org/software/make/#download)
+- A C compiler
+
 ```
 make
-doas make PREFIX=/usr install
+doas make install
 ```
+
 To uninstall
 ```
-doas make PREFIX=/usr uninstall
+doas make uninstall
 ```
 
 ## Usage
