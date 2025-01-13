@@ -12,6 +12,16 @@ void get_presets_path(char *path) {
 	get_xdg_path(path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
 }
 
+void write_or_error(int fd, const void *buf) {
+	size_t len = strlen(buf);
+	ssize_t ret = write(fd, buf, len);
+	if (ret == -1) {
+		perror("Failed to write to presets");
+	} else if ((size_t) ret < len) {
+		fprintf(stderr, "Short write to presets");
+	}
+}
+
 void add_to_presets(struct Presets *presets, struct Preset *preset) {
 	if (presets->size == presets->capacity) {
 		presets->capacity *= 2;
@@ -42,7 +52,7 @@ void rename_preset(struct Preset *preset, char *name) {
 				*pos = ']';
 			}
 		}
-		write(fd, line, strlen(line));
+		write_or_error(fd, line);
 	}
 	fclose(presets_file);
 	close(fd);
@@ -62,10 +72,10 @@ void edit_preset_settings(struct Preset *preset, int bpm, char *rhythm) {
 	char *pos;
 	while (fgets(line, MAX_LINE_LEN, presets_file) != NULL) {
 		if (!in_section) {
-			write(fd, line, strlen(line));
+			write_or_error(fd, line);
 		} else if (line[0] == '[') {
 			dprintf(fd, "bpm=%d\nrhythm=%s\n\n", bpm, rhythm);
-			write(fd, line, strlen(line));
+			write_or_error(fd, line);
 			in_section = 0;
 		}
 		if (!found) {
@@ -130,9 +140,9 @@ void delete_preset(struct Presets *presets, int i) {
 			}
 		}
 		if (!in_section) {
-			write(fd, line, strlen(line));
+			write_or_error(fd, line);
 		} else if (line[0] == '[') {
-			write(fd, line, strlen(line));
+			write_or_error(fd, line);
 			in_section = 0;
 		}
 	}
