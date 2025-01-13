@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 void get_xdg_path(char *path, char *xdg_dir, char *default_dir, char *subpath) {
@@ -17,6 +18,32 @@ void get_xdg_path(char *path, char *xdg_dir, char *default_dir, char *subpath) {
 	} else {
 		snprintf(path, PATH_MAX, "%s/%s", dir, subpath);
 	}
+}
+
+int mkpath(const char* file_path) {
+	if (!file_path || !*file_path) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	char *path_copy = strndup(file_path, PATH_MAX);
+	if (!path_copy) {
+		return -1;
+	}
+
+	for (char *p = strchr(path_copy+1, '/'); p; p = strchr(p+1, '/')) {
+		*p = '\0';
+		if (mkdir(path_copy, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == -1) {
+			if (errno != EEXIST) {
+				free(path_copy);
+				return -1;
+			}
+		}
+		*p = '/';
+	}
+
+	free(path_copy);
+	return 0;
 }
 
 int mktemp_in_tmpdir(char *template) {
