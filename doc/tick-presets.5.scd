@@ -19,7 +19,7 @@ with no spaces around the equal signs.
 
 A rhythm is represented by a sequence of greater than symbols (*>*),
 periods (*.*), or other characters.
-*>* represets an accented tick while *.* represets a unaccented tick.
+*>* represets an accented tick while *.* represets an unaccented tick.
 Any other character represents a rest.
 See tick-config(5) for configuring the pitch of the accented and unaccented
 ticks.
