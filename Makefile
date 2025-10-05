@@ -1,4 +1,4 @@
-VERSION := 1.2.0
+VERSION := 1.2.3
 CC ?= tcc
 LDFLAGS += -lasound -lm
 CFLAGS += -DVERSION='"$(VERSION)"' -Wall -Wextra -Werror -pedantic
