@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]) {
 	if (argc > 1) {
-		if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+		if (strcmp(argv[1], "-V") == 0 || strcmp(argv[1], "--version") == 0) {
 			printf("tick %s\n", VERSION);
 			return EXIT_SUCCESS;
 		}
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 		} else if (strcmp(argv[1], "config") == 0) {
 			get_config_path(path);
 		} else {
-			fprintf(stderr, "Unrecognized input: %s\nUsage: tick [-v | --version] [config | presets]\n", argv[1]);
+			fprintf(stderr, "Unrecognized input: %s\nUsage: tick [-V | --version] [config | presets]\n", argv[1]);
 			return EXIT_FAILURE;
 		}
 		if (path[0] == '\0') {
