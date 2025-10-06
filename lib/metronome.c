@@ -38,12 +38,14 @@ void start_metronome(struct Metronome *m) {
 		m->pa.buffer = create_waves(&m->pa.buff_size, &m->ps);
 		pthread_create(&m->tid, NULL, start_player, &m->pa);
 		m->ps.playing = 1;
+		display_player_state(m);
 	}
 }
 
 void stop_metronome(struct Metronome *m) {
 	pthread_cancel(m->tid);
 	m->ps.playing = 0;
+	display_player_state(m);
 }
 
 void set_bpm(struct Metronome *m, int bpm) {
@@ -80,5 +82,8 @@ void display_player_state(struct Metronome *m) {
 		unsaved_prefix = "*\033[3m";
 	}
 	printf("%s\033[1m(%s)\033[0m %s @ %d", unsaved_prefix, m->presets.items[m->preset_index].name, m->ps.rhythm, m->ps.bpm);
+	if (!m->ps.playing) {
+		printf(" (paused)");
+	}
 	fflush(stdout);
 }
