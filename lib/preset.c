@@ -9,7 +9,7 @@
 static char presets_path[PATH_MAX];
 
 void get_presets_path(char *path) {
-	get_xdg_path(path, "XDG_DATA_HOME", ".local/share", "tick/presets.ini");
+	get_xdg_path(path, "XDG_CONFIG_HOME", ".config", "tick/presets.ini");
 }
 
 void write_or_error(int fd, const void *buf) {
