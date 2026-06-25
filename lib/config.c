@@ -29,8 +29,14 @@ void process_config_file(struct Config *config, FILE *file) {
 			config->freq_accented = atoi(pos);
 		} else if (strcmp(line, "freq.") == 0) {
 			config->freq_general = atoi(pos);
+		} else if (strcmp(line, "fine_interval") == 0) {
+			config->fine_interval = atoi(pos);
 		} else if (strcmp(line, "interval") == 0) {
 			config->interval = atoi(pos);
+		} else if (strcmp(line, "up_fine") == 0) {
+			config->keys.up = str_to_key(pos);
+		} else if (strcmp(line, "down_fine") == 0) {
+			config->keys.down = str_to_key(pos);
 		} else if (strcmp(line, "up") == 0) {
 			config->keys.up = str_to_key(pos);
 		} else if (strcmp(line, "down") == 0) {
@@ -70,10 +76,13 @@ void get_config(struct Config *config) {
 	*config = (struct Config){
 		.freq_accented = 587,
 		.freq_general = 440,
+                .fine_interval = 3,
 		.interval = 20,
 		.keys = {
-			.up = 'k',
-			.down = 'j',
+			.up_fine = 'k',
+			.down_fine = 'j',
+			.up = 'K',
+			.down = 'J',
 			.next = 'l',
 			.prev = 'h',
 			.toggle_play = ' ',
@@ -103,6 +112,8 @@ void boldify(char *str) {
 }
 
 void display_keybinds(struct Config *c) {
+	char up_fine_key[MAX_KEY_STR_LEN];
+	char down_fine_key[MAX_KEY_STR_LEN];
 	char up_key[MAX_KEY_STR_LEN];
 	char down_key[MAX_KEY_STR_LEN];
 	char next_key[MAX_KEY_STR_LEN];
@@ -115,6 +126,8 @@ void display_keybinds(struct Config *c) {
 	char open_prompt_key[MAX_KEY_STR_LEN];
 	char quit_key[MAX_KEY_STR_LEN];
 
+	key_to_str(up_fine_key, c->keys.up_fine);
+	key_to_str(down_fine_key, c->keys.down_fine);
 	key_to_str(up_key, c->keys.up);
 	key_to_str(down_key, c->keys.down);
 	key_to_str(next_key, c->keys.next);
@@ -127,6 +140,8 @@ void display_keybinds(struct Config *c) {
 	key_to_str(open_prompt_key, c->keys.open_prompt);
 	key_to_str(quit_key, c->keys.quit);
 
+	boldify(up_fine_key);
+	boldify(down_fine_key);
 	boldify(up_key);
 	boldify(down_key);
 	boldify(next_key);
@@ -139,8 +154,11 @@ void display_keybinds(struct Config *c) {
 	boldify(open_prompt_key);
 	boldify(quit_key);
 
-	printf("%s +BPM | %s -BPM | %s Next preset | %s Prev preset | %s Toggle play\n"
+	printf("%s/%s +BPM | %s/%s -BPM | %s Next preset | %s Prev preset | %s Toggle play\n"
 			"%s Save | %s Rename | %s Create | %s Delete | %s Open prompt | %s Quit\n",
-			up_key, down_key, next_key, prev_key, toggle_play_key, save_key,
-			rename_key, create_key, delete_key, open_prompt_key, quit_key);
+			up_fine_key, up_key, down_fine_key, down_key,
+                        next_key, prev_key,
+                        toggle_play_key, save_key,
+			rename_key, create_key, delete_key,
+                        open_prompt_key, quit_key);
 }

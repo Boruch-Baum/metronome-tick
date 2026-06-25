@@ -3,9 +3,16 @@ A preset-oriented metronome TUI.
 
 > [!NOTE]
 > This is a fork of  https://git.sr.ht/~liliace/tick .
-> The only functional change made (so far) has been
-> to move the `preset.ini` file from `XDG_DATA_HOME` to
+> The only functional changes made (so far) have been:
+>
+> 1. Move the `preset.ini` file from `XDG_DATA_HOME` to
 > `XDG_CONFIG_HOME`.
+>
+> 2. Change default keybindings: j -> J, k -> K
+>
+> 3. Add commands to finely adjust the tempo (default: 3 bpm), using
+>    default keybindings j, k.
+
 
 ## Installation
 Build time dependencies:

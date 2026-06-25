@@ -39,7 +39,11 @@ int main(int argc, char *argv[]) {
 	int c;
 	while (1) {
 		c = get_input();
-		if (c == m.config.keys.up) {
+		if (c == m.config.keys.up_fine) {
+			set_bpm(&m, m.ps.bpm+m.config.fine_interval);
+		} else if (c == m.config.keys.down_fine) {
+			set_bpm(&m, m.ps.bpm-m.config.fine_interval);
+		} else if (c == m.config.keys.up) {
 			set_bpm(&m, m.ps.bpm+m.config.interval);
 		} else if (c == m.config.keys.down) {
 			set_bpm(&m, m.ps.bpm-m.config.interval);

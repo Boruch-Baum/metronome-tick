@@ -1,4 +1,6 @@
 struct Keys {
+	char up_fine;
+	char down_fine;
 	char up;
 	char down;
 	char next;
@@ -15,6 +17,7 @@ struct Keys {
 struct Config {
 	int freq_accented;
 	int freq_general;
+	int fine_interval;
 	int interval;
 	struct Keys keys;
 };

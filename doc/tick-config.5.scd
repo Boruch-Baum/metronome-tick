@@ -29,15 +29,24 @@ Inline comments are not supported.
 |- freq.
 :- Frequency of the unaccented tick
 :- 440
+|- fine_interval
+:- Fine Interval to increase/decrease BPM by
+:- 3
 |- interval
 :- Interval to increase/decrease BPM by
 :- 20
+|- up_fine
+:- Keybind for fine *+BPM*
+:- k
+|- down_fine
+:- Keybind for fine *-BPM*
+:- j
 |- up
 :- Keybind for *+BPM*
-:- k
+:- K
 |- down
 :- Keybind for *-BPM*
-:- j
+:- J
 |- next
 :- Keybind for *Next preset*
 :- l
