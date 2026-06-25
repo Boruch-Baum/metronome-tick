@@ -37,9 +37,9 @@ It is up to the user to ensure that each preset name in the file is unique.
 
 # FILES
 
-The tick program reads from *$XDG_DATA_HOME/tick/presets.ini* if the
-*$XDG_DATA_HOME* environment variable is defined and non-empty.
-Otherwise, it reads from *$HOME/.local/share/tick/presets.ini*
+The tick program reads from *$XDG_CONFIG_HOME/tick/presets.ini* if the
+*$XDG_CONFIG_HOME* environment variable is defined and non-empty.
+Otherwise, it reads from *$HOME/.config/tick/presets.ini*
 if *$HOME* is defined and non-empty.
 
 # SEE ALSO
