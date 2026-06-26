@@ -25,7 +25,8 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 	int tick_frame_size = SAMPLE_RATE / ps->bpm * 60; // SAMPLE_RATE / (bpm / 60)
 	*buff_size = tick_frame_size * strlen(ps->rhythm);
 	uint8_t *buffer = calloc(*buff_size, sizeof(uint8_t));
-	int freq;
+	double freq;
+//      freq = 2500.0;     // click-like, higher than a normal beep
 	for (int i = 0; ps->rhythm[i] != '\0'; i++) {
 		switch (ps->rhythm[i]) {
 		case '>':
@@ -38,12 +39,15 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 			freq = 0;
 			continue;
 		}
-		int inc = PEAK_TO_PEAK * freq / SAMPLE_RATE;
-		int offset = i * tick_frame_size;
-		for (int j = 0, osc = 0; j < tick_frame_size / 4; j++, osc += inc) {
-			// https://zserge.com/posts/etude-in-c/
-			buffer[offset+j] = AMPLITUDE*sin(osc*SINE_FACTOR) + AMPLITUDE;
-		}
+                int offset = i * tick_frame_size;
+                double decay = 35.0;           // larger = shorter click
+                double phase_inc = 2.0 * M_PI * freq / SAMPLE_RATE;
+                for (int j = 0; j < tick_frame_size / 4; j++) {
+                    double t = (double)j / SAMPLE_RATE;
+                    double env = exp(-decay * t);
+                    double s = env * sin(phase_inc * j);
+                    buffer[offset + j] = (int)(AMPLITUDE * s) + AMPLITUDE;
+                }
 	}
 	return buffer;
 }

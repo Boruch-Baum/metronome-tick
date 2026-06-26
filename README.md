@@ -12,7 +12,8 @@ A preset-oriented metronome TUI.
 >
 > 3. Add commands to finely adjust the tempo (default: 3 bpm), using
 >    default keybindings j, k.
-
+>
+> 4. Replace beep sound with a more metronome-like one.
 
 ## Installation
 Build time dependencies:
