@@ -120,7 +120,11 @@ int main(int argc, char *argv[]) {
 			} else if (strncmp(line, "set", pos-line) == 0 ||
 					strncmp(line, "s", pos-line) == 0) {
 				char *sep = strchr(pos+1, '@');
-				if (sep-pos > MAX_RHYTHM_LEN) { // sep - (pos + 1) > MAX_RHYTHM_LEN - 1
+				if (sep == NULL) {
+					display_player_state(&m);
+					print_error("Invalid syntax: expected rhythm@bpm");
+				} else if (sep-pos > MAX_RHYTHM_LEN) { // sep - (pos + 1) > MAX_RHYTHM_LEN - 1
+					display_player_state(&m);
 					print_error("Rhythm cannot be longer than %d characters", MAX_RHYTHM_LEN-1);
 				} else {
 					*sep = '\0';
