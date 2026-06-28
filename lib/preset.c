@@ -25,7 +25,11 @@ static void write_or_error(int fd, const void *buf) {
 static void add_to_presets(struct Presets *presets, struct Preset *preset) {
 	if (presets->size == presets->capacity) {
 		presets->capacity *= 2;
-		presets->items = realloc(presets->items, sizeof(struct Preset) * presets->capacity);
+		struct Preset *new_items = realloc(presets->items, sizeof(struct Preset) * presets->capacity);
+		if (new_items == NULL) {
+			return;
+		}
+		presets->items = new_items;
 	}
 	presets->items[presets->size] = *preset;
 	presets->size += 1;
