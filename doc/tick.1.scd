@@ -41,7 +41,7 @@ See tick-config(5) for configuring the keybinds.
 	Increase/decrease the BPM by _fine_interval_ or _interval_.
 	The changes will not be saved to the preset until the *Save* command is run.
 
-	See tick-config(5) for configuring the value of _interval_.
+	See tick-config(5) for configuring  _fine_interval_ and _interval_.
 
 *Create*
 	Create a new preset with the current rhythm and BPM.
