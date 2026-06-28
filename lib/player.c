@@ -24,8 +24,9 @@ void prepare_player(snd_pcm_t **pcm) {
 uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 	int tick_frame_size = SAMPLE_RATE * 60 / ps->bpm; // SAMPLE_RATE / (bpm / 60)
 	*buff_size = tick_frame_size * strlen(ps->rhythm);
-	uint8_t *buffer = calloc(*buff_size, sizeof(uint8_t));
-	double freq;
+	uint8_t *buffer = malloc(*buff_size);
+	memset(buffer, AMPLITUDE, *buff_size);
+	int freq;
 //      freq = 2500.0;     // click-like, higher than a normal beep
 	for (int i = 0; ps->rhythm[i] != '\0'; i++) {
 		switch (ps->rhythm[i]) {
@@ -36,7 +37,6 @@ uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 			freq = ps->freq_general;
 			break;
 		default:
-			freq = 0;
 			continue;
 		}
                 int offset = i * tick_frame_size;
