@@ -56,7 +56,7 @@ void stop_metronome(struct Metronome *m) {
 }
 
 void set_bpm(struct Metronome *m, int bpm) {
-	m->ps.bpm = bpm;
+	m->ps.bpm = bpm < 0 ? 0 : bpm;
 	display_player_state(m);
 	if (m->ps.playing) {
 		start_metronome(m);
