@@ -1,4 +1,5 @@
 #include "metronome.h"
+#include "input.h"
 #include <pthread.h>
 
 void apply_preset(struct Metronome *m) {
@@ -36,6 +37,12 @@ void start_metronome(struct Metronome *m) {
 			free(m->pa.buffer);
 		}
 		m->pa.buffer = create_waves(&m->pa.buff_size, &m->ps);
+		if (m->pa.buffer == NULL) {
+			print_error("Failed to create audio buffer");
+			m->ps.playing = 0;
+			display_player_state(m);
+			return;
+		}
 		pthread_create(&m->tid, NULL, start_player, &m->pa);
 		m->ps.playing = 1;
 		display_player_state(m);

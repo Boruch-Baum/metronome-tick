@@ -43,8 +43,16 @@ static uint8_t to_sample(double centered) {
 
 uint8_t *create_waves(int *buff_size, struct PlayerState *ps) {
 	int tick_frame_size = SAMPLE_RATE * 60 / ps->bpm; // SAMPLE_RATE / (bpm / 60)
+	if (tick_frame_size == 0) {
+		*buff_size = 0;
+		return NULL;
+	}
 	*buff_size = tick_frame_size * strlen(ps->rhythm);
 	uint8_t *buffer = malloc(*buff_size);
+	if (buffer == NULL) {
+		*buff_size = 0;
+		return NULL;
+	}
 	memset(buffer, AMPLITUDE, *buff_size);
 	int tick_frames = SAMPLE_RATE * TICK_MS / 1000;
 	if (tick_frames > tick_frame_size) {
