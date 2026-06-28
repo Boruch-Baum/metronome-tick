@@ -11,7 +11,7 @@ void get_config_path(char *path) {
 	get_xdg_path(path, "XDG_CONFIG_HOME", ".config", "tick/tick.ini");
 }
 
-void process_config_file(struct Config *config, FILE *file) {
+static void process_config_file(struct Config *config, FILE *file) {
 	char line[MAX_LINE_LEN];
 	char error[MAX_LINE_LEN+19]; // 19 from "unrecognized key ''"
 	while (fgets(line, MAX_LINE_LEN, file) != NULL) {
@@ -103,7 +103,7 @@ void get_config(struct Config *config) {
 	}
 }
 
-void boldify(char *str) {
+static void boldify(char *str) {
 	int len = strlen(str);
 	memmove(str+4, str, len);
 	memcpy(str, "\033[1m", 4);

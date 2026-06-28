@@ -10,7 +10,7 @@
 
 struct termios original_termios;
 
-void reset_terminal_mode(void) {
+static void reset_terminal_mode(void) {
 	tcsetattr(STDIN_FILENO, TCSANOW, &original_termios);
 }
 

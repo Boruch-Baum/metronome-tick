@@ -12,7 +12,7 @@ void get_presets_path(char *path) {
 	get_xdg_path(path, "XDG_CONFIG_HOME", ".config", "tick/presets.ini");
 }
 
-void write_or_error(int fd, const void *buf) {
+static void write_or_error(int fd, const void *buf) {
 	size_t len = strlen(buf);
 	ssize_t ret = write(fd, buf, len);
 	if (ret == -1) {
@@ -22,7 +22,7 @@ void write_or_error(int fd, const void *buf) {
 	}
 }
 
-void add_to_presets(struct Presets *presets, struct Preset *preset) {
+static void add_to_presets(struct Presets *presets, struct Preset *preset) {
 	if (presets->size == presets->capacity) {
 		presets->capacity *= 2;
 		presets->items = realloc(presets->items, sizeof(struct Preset) * presets->capacity);
@@ -154,7 +154,7 @@ void delete_preset(struct Presets *presets, int i) {
 	presets->size -= 1;
 }
 
-void process_presets_file(struct Presets *presets, FILE *file) {
+static void process_presets_file(struct Presets *presets, FILE *file) {
 	char line[MAX_LINE_LEN];
 	char error[MAX_LINE_LEN+19]; // 19 from "unrecognized key ''"
 	while (fgets(line, MAX_LINE_LEN, file) != NULL) {

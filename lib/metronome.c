@@ -2,7 +2,7 @@
 #include "input.h"
 #include <pthread.h>
 
-void apply_preset(struct Metronome *m) {
+static void apply_preset(struct Metronome *m) {
 	m->ps.bpm = m->presets.items[m->preset_index].bpm;
 	memcpy(m->ps.rhythm, m->presets.items[m->preset_index].rhythm, MAX_RHYTHM_LEN);
 }
