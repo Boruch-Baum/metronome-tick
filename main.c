@@ -82,7 +82,11 @@ int main(int argc, char *argv[]) {
 			get_command(yn, 2, "Delete this preset? (y/N) ");
 			if (yn[0] == 'y') {
 				delete_preset(&m.presets, m.preset_index);
-				set_preset(&m, m.preset_index%m.presets.size);
+				if (m.presets.size > 0) {
+					set_preset(&m, m.preset_index%m.presets.size);
+				} else {
+					display_player_state(&m);
+				}
 			} else {
 				display_player_state(&m);
 			}
