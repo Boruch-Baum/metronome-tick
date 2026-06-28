@@ -131,5 +131,5 @@ void print_error(const char *restrict fmt, ...) {
 	vprintf(fmt, ap);
 	va_end(ap);
 	fflush(stdout);
-	printf("\33[2K\033[A\33[2K"); // purposely not flushing until next flush
+	printf("\33[2K\033[A"); // purposely not flushing until next flush
 }
