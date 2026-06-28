@@ -29,9 +29,12 @@ void init_metronome(struct Metronome *m) {
 void start_metronome(struct Metronome *m) {
 	if (m->ps.playing) {
 		pthread_cancel(m->tid);
+		pthread_join(m->tid, NULL);
+		m->ps.playing = 0;
 	}
 	if (m->ps.bpm <= 0) {
-		printf("\nBPM cannot be <= 0\n");
+		display_player_state(m);
+		print_error("BPM cannot be <= 0");
 	} else {
 		if (m->pa.buffer) {
 			free(m->pa.buffer);
